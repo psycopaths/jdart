@@ -243,6 +243,3 @@ jdart.configs.sample.exploration.resume =\
 [2]: https://z3.codeplex.com
 [3]: https://github.com/psycopaths
 
-
-
-
