@@ -22,25 +22,22 @@ for triggering exactly this path through the concolically executed method.
 ## Installation ##
 
 ### JPF-core 8 ##
-JDart is compatible with version 8 (see previous versions compatible with jpf-core 7) of the Java PathFinder framework. Please make sure
+JDart is compatible with version 8 of the Java PathFinder framework. Please make sure
 you have the most recent version of [jpf-core][0].
 
 **Step 1:** Clone the `jpf-core` repository:
-```
-#!bash
+```bash
 $ hg clone http://babelfish.arc.nasa.gov/hg/jpf/jpf-core
 ```
 
 **Step 2:** Build *jpf-core*
-```
-#!bash
+```bash
 $ ant
 ```
 
 **Step 3:** Make sure the `jpf-core` property in your `site.properties` (in `$HOME/.jpf`) points to the
    respective directory.
-```
-#!bash
+```bash
 # ~/.jpf/site.properties
 # ...
 jpf-core = /path/to/jpf-core
@@ -65,8 +62,7 @@ property.
 ## Using JDart ##
 For an example of how to configure JDart, please have a look at the `test_xxx.jpf` files
 in `src/examples/simple`. JDart can be run on these examples using the `jpf` binary:
-```
-#!bash
+```bash
 /path/to/jpf-core/bin/jpf src/examples/simple/test_foo.jpf
 ```
 Make sure that the `JVM_ARGS` environment variable is set correctly (cf. the instructions
@@ -85,8 +81,7 @@ this section, we will refer to this prefix as `<prefix>`.
 
 The method to be in fact analyzed is specified by setting the `concolic.method` configuration
 to the `<name>` of the target method. For example:
-```
-#!bash
+```bash
 ...
 concolic.method = cm1
 ```
@@ -99,16 +94,14 @@ used to refer to them (it is discouraged to use anything but valid Java identifi
 here).
 
 A sample target method configuration could look like this:
-```
-#!bash
+```bash
 concolic.methods.cm1=sample.Foo.foo(a:int,b:boolean)
 ```
 This triggers the concolic execution of method `foo` with an `int`
 and a `boolean` parameter of class `sample.Foo`. The parameters
 will be referred to as `a` and `b`, respectively. Note that also
 the following would have been valid:
-```
-#!bash
+```bash
 concolic.methods.cm1=sample.Foo.foo(a:int,boolean)
 ```
 In this case, however, the second parameter would not be treated symbolically.
@@ -226,8 +219,7 @@ that matches the `resume` pattern, exploration is resumed. Finally, the boolean
 default is `true`).
 
 Examples:
-```
-#!bash
+```bash
 jdart.configs.sample.exploration.initial = false # don't explore initially
 # Resume exploration in the method sample.Foo.foo(int,boolean)
 jdart.configs.sample.exploration.resume = sample.Foo.foo(int,boolean)
