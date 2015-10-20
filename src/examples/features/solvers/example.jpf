@@ -1,0 +1,10 @@
+@include=../../config/jdart.jpf
+
+
+target=features.solvers.Input
+
+concolic.method.foo=features.solvers.Input.foo(d:double)
+
+concolic.method.bar=features.solvers.Input.bar(d:double)
+
+concolic.method.baz=features.solvers.Input.baz(d1:double,d2:double)

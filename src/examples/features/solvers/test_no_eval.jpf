@@ -1,0 +1,7 @@
+@include=./example.jpf
+
+concolic.method=foo
+
+symbolic.dp=selective
+selective.dp=z3
+selective.eval=false

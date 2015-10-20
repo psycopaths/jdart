@@ -1,0 +1,12 @@
+
+jpf-jdart.native_classpath=\
+  ${jpf-jdart}/lib/ST-4.0.5.jar;\
+  ${jpf-jdart}/lib/antlr-3.4-complete.jar;\
+  ${jpf-jdart}/lib/gson-2.2.4.jar;\
+  ${jpf-jdart}/build/jpf-jdart.jar;\
+  ${jpf-jdart}/build/examples;\  
+  ${jpf-jdart}/build/jpf-jdart-annotations.jar
+
+shell=testsuites.TestSuiteExample
+target=null
+log.info=constraints,jdart

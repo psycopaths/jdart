@@ -1,0 +1,22 @@
+############################################################################### 
+#
+# default jdart tools
+#
+shell=gov.nasa.jpf.jdart.JDart
+symbolic.dp=z3
+symbolic.dp.z3.bitvectors=true
+
+############################################################################### 
+#
+# logging and jpf output
+#
+log.finest=jdart
+log.info=constraints
+
+# suppress jpf output
+report.console.start=
+report.console.finished=
+report.console.property_violation=
+
+jdart.configs.all_fields_symbolic.symbolic.include=this.*
+

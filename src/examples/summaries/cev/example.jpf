@@ -1,0 +1,14 @@
+@include = ../../config/jdart.jpf
+
+target=summaries.cev.Test
+
+jdart.configs.summaries.cev.symbolic.statics=summaries.cev.Spacecraft
+jdart.configs.summaries.cev.symbolic.include=summaries.cev.Spacecraft;summaries.cev.Spacecraft.*
+
+concolic.method.abort=summaries.cev.Spacecraft.doLowActiveAbort()
+concolic.method.abort.config=summaries.cev
+
+concolic.method.reset=summaries.cev.Spacecraft.reset(i:int)
+concolic.method.abort.config=summaries.cev
+
+

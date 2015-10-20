@@ -1,0 +1,28 @@
+
+jpf-jdart.native_classpath=\
+  ${jpf-jdart}/lib/ST-4.0.5.jar;\
+  ${jpf-jdart}/lib/antlr-3.4-complete.jar;\
+  ${jpf-jdart}/lib/gson-2.2.4.jar;\
+  ${jpf-jdart}/lib/guava-14.0.1.jar;\
+  ${jpf-jdart}/lib/jconstraints-0.9.1-SNAPSHOT.jar;\
+  ${jpf-jdart}/lib/jConstraints-z3-1.0-SNAPSHOT.jar;\
+  ${jpf-jdart}/lib/com.microsoft.z3.jar;\
+  ${jpf-jdart}/build/jpf-jdart.jar;\
+  ${jpf-jdart}/build/tests;\  
+  ${jpf-jdart}/build/jpf-jdart-annotations.jar
+
+
+shell=gov.nasa.jpf.jdart.regressions.RegressionShell
+symbolic.dp=NativeZ3
+symbolic.dp.z3.bitvectors=true
+
+log.finest=jdart
+log.info=constraints
+
+# suppress jpf output
+report.console.start=
+report.console.finished=
+report.console.property_violation=
+
+jdart.configs.all_fields_symbolic.symbolic.include=this.*
+

@@ -1,0 +1,13 @@
+
+@include = ../../config/jdart.jpf
+
+############################################################################### 
+#
+# experiment setup
+#
+
+z3.timeout = 5000
+target=features.double2long.Input
+concolic.method.foo=features.double2long.Input.foo(x:double)
+
+

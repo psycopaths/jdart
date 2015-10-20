@@ -1,0 +1,30 @@
+@include=../../config/jdart.jpf
+
+target=features.simple.Input
+
+concolic.method.foo=features.simple.Input.foo(i:int)
+concolic.method.foo.config=all_fields_symbolic
+
+concolic.method.bar=features.simple.Input.bar(d:double)
+
+concolic.method.zoo=features.simple.Input.zoo(i:int,j:short,f:float)
+concolic.method.zoo.config=zoo
+
+concolic.method.baz=features.simple.Input.baz(d:features.simple.Input$Data)
+concolic.method.baz.config=baz
+
+concolic.method.xyz=features.simple.Input.xyz(m:java.util.Map)
+concolic.method.xyz.config=xyz
+
+jdart.configs.xyz.symbolic.include=m[*
+
+jdart.configs.baz.symbolic.include=d.*
+
+
+jdart.configs.zoo.constraints=\
+	f > 256.0f;\
+	j >= 0
+
+jdart.configs.zoo.exploration.initial=true
+jdart.configs.zoo.exploration.suspend=*.zoo_sub(*
+

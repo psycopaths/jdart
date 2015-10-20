@@ -1,0 +1,17 @@
+@include = ../../config/jdart.jpf
+
+target=summaries.abp.Protocol
+
+jdart.configs.msg.symbolic.statics=summaries.abp.Protocol
+jdart.configs.msg.symbolic.include=summaries.abp.Protocol.*
+
+concolic.method.msg=summaries.abp.Protocol.msg(sequence:int,content:int)
+concolic.method.msg.config=msg
+
+concolic.method.recv=summaries.abp.Protocol.recv_ack(value:int)
+concolic.method.recv.config=all_fields_symbolic
+
+concolic.method.reset=summaries.abp.Protocol.reset()
+concolic.method.reset.config=all_fields_symbolic
+
+

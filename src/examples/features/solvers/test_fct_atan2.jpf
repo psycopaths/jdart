@@ -1,0 +1,13 @@
+@include=./example.jpf
+
+concolic.method=baz
+
+symbolic.dp=functions
+functions.dp=z3
+functions.use_defs=true
+functions.domain_bounds=true
+
+#z3.options=smt.mbqi=true;smt.macro-finder=true
+
+log.finest=jdart,constraints
+log.info=

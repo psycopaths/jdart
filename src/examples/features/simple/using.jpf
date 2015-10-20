@@ -1,0 +1,36 @@
+@using = jpf-jdart
+
+target=features.simple.Input
+
+# method config jdart
+
+concolic.method.zoo=features.simple.Input.zoo(i:int,j:short,f:float)
+concolic.method=zoo
+
+# method config jpf
+
+perturb.params=zoo
+perturb.zoo.class=gov.nasa.jpf.jdart.ConcolicPerturbator
+perturb.zoo.method=features.simple.Input.zoo(int,short,float)
+
+# jpf config
+
+jvm.insn_factory.class=gov.nasa.jpf.jdart.ConcolicInstructionFactory
+peer_packages=gov.nasa.jpf.jdart.peers;
+listener=gov.nasa.jpf.jdart.ConcolicListener
+perturb.class=gov.nasa.jpf.jdart.ConcolicPerturbator
+search.multiple_errors=true
+jdart.concolic_explorer_instance=gov.nasa.jpf.jdart.ConcolicExplorer@jdart-explorer
+
+# jdart config
+
+symbolic.dp=z3
+symbolic.dp.z3.bitvectors=true
+
+# logging 
+
+log.finest=jdart
+log.info=constraints
+
+
+

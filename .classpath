@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/classes"/>
+	<classpathentry kind="src" path="src/tests"/>
+	<classpathentry kind="src" path="src/peers"/>
+	<classpathentry kind="src" path="src/main"/>
+	<classpathentry kind="src" path="src/examples"/>
+	<classpathentry kind="src" path="src/annotations"/>
+	<classpathentry kind="src" path="src/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jpf-core"/>
+	<classpathentry kind="lib" path="lib/jconstraints-0.9.1-SNAPSHOT.jar" sourcepath="/jconstraints"/>
+	<classpathentry kind="lib" path="lib/antlr-3.4-complete.jar"/>
+	<classpathentry kind="lib" path="lib/gson-2.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/guava-14.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jConstraints-z3-1.0-SNAPSHOT.jar" sourcepath="/jConstraints-z3"/>
+	<classpathentry kind="lib" path="lib/ST-4.0.5.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

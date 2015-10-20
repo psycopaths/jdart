@@ -1,0 +1,8 @@
+
+@include=./example.jpf
+
+concolic.method=recv
+
+
+
+

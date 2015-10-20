@@ -1,0 +1,7 @@
+@include=../../config/jdart.jpf
+
+
+target=features.fields.Input
+
+concolic.method.foo=features.fields.Input.foo(i:double,b:boolean)
+

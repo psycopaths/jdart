@@ -1,0 +1,7 @@
+@include=./example.jpf
+
+concolic.method=foo
+
+
+jdart.configs.foo.use_func_defs=true
+z3.options=smt.mbqi=true;smt.macro-finder=true

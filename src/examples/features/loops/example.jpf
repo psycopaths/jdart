@@ -1,0 +1,7 @@
+@include=../../config/jdart.jpf
+
+
+target=features.loops.Input
+
+concolic.method.foo=features.loops.Input.foo(i:int)
+

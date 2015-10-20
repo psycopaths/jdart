@@ -1,0 +1,12 @@
+@include=../../config/jdart.jpf
+
+
+target=features.globals.Input
+
+jdart.configs.globals.symbolic.statics=features.globals.Input
+jdart.configs.globals.symbolic.include=features.globals.Input.*
+
+
+concolic.method.foo=features.globals.Input.foo(i:int)
+concolic.method.foo.config=globals
+

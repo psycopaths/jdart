@@ -1,0 +1,5 @@
+@include=./example.jpf
+
+concolic.method=bar
+
+z3.timeout=1000

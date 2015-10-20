@@ -1,0 +1,20 @@
+shell=gov.nasa.jpf.jdart.summaries.MethodSummarizer
+
+concolic.method.m1=summaries.json.Input.testConcrete(i:int)
+concolic.method.m1.config=all_fields_symbolic
+concolic.method.m2=summaries.json.Input.testSymbolic(i:int,b:boolean)
+
+summary.methods=m1,m2
+
+symbolic.dp=NativeZ3
+symbolic.dp.z3.bitvectors=true
+
+log.fine=constraints,jdart
+
+# following line used to track what JPF executes
+#listener=.listener.ExecTracker
+
+# avoid statistics during learning process by enabling the following two lines
+report.console.start=
+report.console.finished=
+report.console.property_violation=

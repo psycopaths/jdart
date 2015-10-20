@@ -1,0 +1,6 @@
+@include=../../config/jdart.jpf
+
+
+target=features.nonlinear.Input
+
+concolic.method.foo=features.nonlinear.Input.foo(p:double,q:double)

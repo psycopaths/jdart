@@ -1,0 +1,6 @@
+@include=../../config/jdart.jpf
+
+
+target=features.radians.Input
+
+concolic.method.foo=features.radians.Input.foo(i:int)

@@ -1,0 +1,11 @@
+
+@include = ../../config/jdart.jpf
+
+
+target=features.arrays.Input
+
+concolic.method.m1=features.arrays.Input.m1(c:char[],i:int)
+concolic.method.m2=features.arrays.Input.m2(i:int,c:char[])
+concolic.method.m3=features.arrays.Input.m3(i:int,d:double[])
+concolic.method.m4=features.arrays.Input.m4(i:int,f1:float,f2:float,f3:float)
+

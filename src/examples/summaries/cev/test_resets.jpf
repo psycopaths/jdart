@@ -1,0 +1,10 @@
+@include = ../../config/jdart.jpf
+
+target=summaries.cev.Reset
+
+concolic.method.seq=summaries.cev.Reset.sequence()
+concolic.method.seq.config=all_fields_symbolic
+
+concolic.method=seq
+
+

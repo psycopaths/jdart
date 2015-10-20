@@ -1,0 +1,7 @@
+@include=./example.jpf
+
+concolic.method=bar
+
+jdart.configs.bar.use_func_defs=true
+z3.timeout=1000
+z3.options=smt.mbqi=true;smt.macro-finder=true

@@ -1,0 +1,10 @@
+@include=../config.jpf
+
+jdart.termination=gov.nasa.jpf.jdart.termination.TimedTermination,0,0,5
+
+concolic.method.test=gov.nasa.jpf.jdart.regressions.termination.InfiniteLoop.concolic()
+concolic.method=test
+
+regression.name=Infinite Loop
+regression.target=gov.nasa.jpf.jdart.regressions.termination.InfiniteLoop
+regression.oracle=gov.nasa.jpf.jdart.regressions.termination.Oracle

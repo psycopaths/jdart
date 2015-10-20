@@ -1,0 +1,12 @@
+
+@include = ../../config/jdart.jpf
+
+############################################################################### 
+#
+# experiment setup
+#
+
+target=features.bools.Input
+concolic.method.foo=features.bools.Input.foo(i:int,b:boolean)
+
+

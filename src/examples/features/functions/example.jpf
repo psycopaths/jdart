@@ -1,0 +1,10 @@
+@include=../../config/jdart.jpf
+
+
+target=features.functions.Input
+
+
+concolic.method.foo=features.functions.Input.foo(d1:double,d2:double)
+
+concolic.method.foo.config=foo
+jdart.configs.foo.constraints=(d1 > 0.0 && d1 < 3.0 && d2 > 0.0 && d2 < 3.0)

@@ -1,0 +1,10 @@
+@include=../config.jpf
+
+jdart.termination=gov.nasa.jpf.jdart.termination.TimedTermination,0,0,5
+
+concolic.method.msg=gov.nasa.jpf.jdart.regressions.uncalled.Protocol.msg(sequence:int,content:int)
+concolic.method=msg
+
+regression.name=Uncalled Bug
+regression.target=gov.nasa.jpf.jdart.regressions.uncalled.Protocol
+regression.oracle=gov.nasa.jpf.jdart.regressions.uncalled.Oracle

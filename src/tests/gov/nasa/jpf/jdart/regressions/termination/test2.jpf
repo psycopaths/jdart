@@ -1,0 +1,10 @@
+@include=../config.jpf
+
+jdart.termination=gov.nasa.jpf.jdart.termination.UpToFixedNumber,10
+
+concolic.method.test=gov.nasa.jpf.jdart.regressions.termination.PartialAnalysis.test(i:int)
+concolic.method=test
+
+regression.name=Partial Analysis
+regression.target=gov.nasa.jpf.jdart.regressions.termination.PartialAnalysis
+regression.oracle=gov.nasa.jpf.jdart.regressions.termination.Oracle

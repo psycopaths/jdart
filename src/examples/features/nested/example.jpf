@@ -1,0 +1,7 @@
+@include=../../config/jdart.jpf
+
+
+target=features.nested.Input
+
+concolic.method.bar=features.nested.Input.bar(d:double)
+

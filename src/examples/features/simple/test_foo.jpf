@@ -1,0 +1,6 @@
+@include=./example.jpf
+
+concolic.method=foo
+
+
+
