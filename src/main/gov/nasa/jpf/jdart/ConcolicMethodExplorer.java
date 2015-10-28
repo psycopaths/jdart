@@ -54,9 +54,6 @@ import java.util.List;
 
 import org.antlr.runtime.RecognitionException;
 
-/**
- *
- */
 public class ConcolicMethodExplorer {
   
   private static final class RestoreExploreState {
