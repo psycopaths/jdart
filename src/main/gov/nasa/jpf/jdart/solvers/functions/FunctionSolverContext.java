@@ -48,9 +48,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- *
- */
 public class FunctionSolverContext extends SolverContext {
     
   /**
@@ -102,7 +99,7 @@ public class FunctionSolverContext extends SolverContext {
   /**
    * expression visitor for pre-processing 
    */
-  private final FunctionFinder finder = new FunctionFinder();
+  private final FunctionFinder finder;
   
   /**
    * actual solver context
@@ -129,7 +126,7 @@ public class FunctionSolverContext extends SolverContext {
    */
   private final boolean instantiate;
  
-  private final int precisionElem = 11; //46;
+  private final int precisionElem = 11;//11; //46;
   
   private final int precisionFun = 5; //15;
     
@@ -147,7 +144,8 @@ public class FunctionSolverContext extends SolverContext {
     this.instantiate = instantiate;
     
     // load function tables
-    // TODO: maybe expose precision as parameter?
+    // TODO: maybe expose precision as parameter? 
+    
     SinProperties sin = new SinProperties(precisionElem);
     lookup.put(MathFunctions.SIN, sin);
     lookup.put(MathFunctions.COS, new CosProperties(sin));
@@ -162,6 +160,9 @@ public class FunctionSolverContext extends SolverContext {
     lookup.put(MathFunctions.EXP, new ExpProperties(10)); 
     lookup.put(BooleanDoubleFunction.DOUBLE_IS_NAN, new IsNaNProperties());
 
+    
+    finder = new FunctionFinder(lookup.keySet());
+    
     // init stack
     current = new StackElement();
     stack.add(current);

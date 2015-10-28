@@ -20,9 +20,6 @@ import gov.nasa.jpf.constraints.api.Expression;
 import gov.nasa.jpf.constraints.api.SolverContext;
 import gov.nasa.jpf.constraints.api.Valuation;
 
-/**
- *
- */
 public class FunctionSolver extends ConstraintSolver {
 
   private final ConstraintSolver solver;

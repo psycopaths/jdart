@@ -28,19 +28,30 @@ import gov.nasa.jpf.constraints.expressions.NumericCompound;
 import gov.nasa.jpf.constraints.expressions.PropositionalCompound;
 import gov.nasa.jpf.constraints.expressions.QuantifierExpression;
 import gov.nasa.jpf.constraints.expressions.UnaryMinus;
+import gov.nasa.jpf.constraints.expressions.functions.Function;
 import gov.nasa.jpf.constraints.expressions.functions.FunctionExpression;
 import gov.nasa.jpf.constraints.types.Type;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
+ * @author falk
  */
 public class FunctionFinder extends AbstractExpressionVisitor<Expression, Collection<FunctionExpression>> {
 
   private final Map<String, Variable> known = new HashMap<>();
 
+  
+  private final Set<Function> knownFunctions;
+  
+  public FunctionFinder(Set<Function> knownFunctions) {
+    this.knownFunctions = knownFunctions;
+  }
+  
   public Map<String, Variable> getKnown() {
     return this.known;
   }
@@ -143,14 +154,18 @@ public class FunctionFinder extends AbstractExpressionVisitor<Expression, Collec
     }
     
     FunctionExpression feNew = new FunctionExpression(f.getFunction(), args);
-    String key = feNew.toString();
-    Variable var = known.get(key);
-    if (var == null) {
-      data.add(feNew);
-      var = getVariable(f.getFunction().getReturnType());
-      this.known.put(key, var);     
+    if(this.knownFunctions.contains(feNew.getFunction())) {
+      String key = feNew.toString();
+      Variable var = known.get(key);
+      if (var == null) {
+        data.add(feNew);
+        var = getVariable(f.getFunction().getReturnType());
+        this.known.put(key, var);     
+      }
+      return var;
+    } else {
+      return feNew;
     }
-    return var;
   }
   
   
