@@ -19,6 +19,10 @@ valuation could be or should have been generated for the respective path). In ca
 the status in `OK` or `ERROR`, the leaf will also contain a concrete valuation suitable
 for triggering exactly this path through the concolically executed method.
 
+There is a paper under submission on JDart to TACAS 2016. If you want to
+repeat experiments reported in the paper, use a
+[reproducible research environment in Aptlab][4].
+
 ## Installation ##
 
 ### JPF-core 8 ##
@@ -234,4 +238,4 @@ jdart.configs.sample.exploration.resume =\
 [1]: https://github.com/psycopaths/jConstraints-z3
 [2]: https://z3.codeplex.com
 [3]: https://github.com/psycopaths
-
+[4]: https://www.aptlab.net/p/CAVA/jdart-tacas-2016-v4
