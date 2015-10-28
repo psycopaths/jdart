@@ -32,7 +32,7 @@
   <property file="${jpf-core}/jpf.properties"/>
 
   <!-- compiler settings -->
-  <property name="src_level"     value="7"/>
+  <property name="src_level"     value="8"/>
   <property name="debug"         value="on"/>
   <property name="deprecation"   value="on"/>
 
