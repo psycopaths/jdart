@@ -22,6 +22,8 @@ import gov.nasa.jpf.constraints.solvers.ConstraintSolverFactory;
 import gov.nasa.jpf.constraints.types.TypeContext;
 import gov.nasa.jpf.jdart.ConcolicPerturbator;
 import gov.nasa.jpf.jdart.ConcolicUtil;
+import gov.nasa.jpf.jdart.exploration.DepthFirst;
+import gov.nasa.jpf.jdart.exploration.ExplorationStrategy;
 import gov.nasa.jpf.jdart.termination.NeverTerminate;
 import gov.nasa.jpf.jdart.termination.TerminationStrategy;
 
@@ -31,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.base.Predicate;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -63,6 +66,11 @@ public class ConcolicConfig {
    * strategy for terminating jdart
    */
   private TerminationStrategy termination;
+  
+  /**
+   * Strategy for exploring constraints tree
+   */
+  private ExplorationStrategy explorationStrategy;
   
   /**
    * 
@@ -220,6 +228,17 @@ public class ConcolicConfig {
     
     // parse termination
     this.termination = parseTerminationStrategy(conf);
+    // parse exploration strategy
+    this.explorationStrategy = parseExplorationStrategy(conf);
+    
+  }
+ 
+  public static ExplorationStrategy parseExplorationStrategy(Config conf) {
+    return conf.getInstance("jdart.exploration", ExplorationStrategy.class, DepthFirst.class.getName());
+  }
+  
+  public ExplorationStrategy getExplorationStrategy() {
+    return this.explorationStrategy;
   }
   
   public static TerminationStrategy parseTerminationStrategy(Config conf) {
