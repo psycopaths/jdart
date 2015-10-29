@@ -35,6 +35,7 @@ import gov.nasa.jpf.jdart.constraints.InternalConstraintsTree;
 import gov.nasa.jpf.jdart.constraints.InternalConstraintsTree.BranchEffect;
 import gov.nasa.jpf.jdart.constraints.PathResult;
 import gov.nasa.jpf.jdart.constraints.PostCondition;
+import gov.nasa.jpf.jdart.exploration.ExplorationStrategy;
 import gov.nasa.jpf.jdart.objects.SymbolicObjectsContext;
 import gov.nasa.jpf.util.JPFLogger;
 import gov.nasa.jpf.vm.ClassInfo;
@@ -122,12 +123,14 @@ public class ConcolicMethodExplorer {
     this.methodConfig = config.getMethodConfig(id);
     this.anaConf = methodConfig.getAnalysisConfig();
     
+    ExplorationStrategy exploration = config.getExplorationStrategy();
+    
     // get preset values
     ConcolicValues vals = methodConfig.getConcolicValues();
     
     // create a constraints tree
     this.solverCtx = config.getSolver().createContext();    
-    this.constraintsTree = new InternalConstraintsTree(solverCtx, anaConf, vals);
+    this.constraintsTree = new InternalConstraintsTree(solverCtx, exploration, anaConf, vals);
   }
   
   public void setExplore(boolean explore) {

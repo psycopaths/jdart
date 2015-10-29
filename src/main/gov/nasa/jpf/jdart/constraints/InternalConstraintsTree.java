@@ -23,6 +23,7 @@ import gov.nasa.jpf.constraints.api.Valuation;
 import gov.nasa.jpf.constraints.util.ExpressionUtil;
 import gov.nasa.jpf.jdart.config.AnalysisConfig;
 import gov.nasa.jpf.jdart.config.ConcolicValues;
+import gov.nasa.jpf.jdart.exploration.ExplorationStrategy;
 import gov.nasa.jpf.util.JPFLogger;
 import gov.nasa.jpf.util.Pair;
 import gov.nasa.jpf.vm.Instruction;
@@ -53,20 +54,25 @@ public class InternalConstraintsTree {
   private ArrayList<Integer> expectedPath = new ArrayList<>();
   private boolean diverged = false;
   private final SolverContext solverCtx;
+  
+  private final ExplorationStrategy explorationStrategy;
   private boolean explore;
   
   private final ConcolicValues preset;
   private boolean replay = false;
   
-  private Valuation prev = null;  
- 
+  private Valuation prev = null;
   
-  public InternalConstraintsTree(SolverContext solverCtx, AnalysisConfig anaConf) {
-    this(solverCtx, anaConf, null);   
+  public InternalConstraintsTree(SolverContext solverCtx, ExplorationStrategy explorationStrategy, AnalysisConfig anaConf) {
+    this(solverCtx, explorationStrategy, anaConf, null);   
   }
 
-  public InternalConstraintsTree(SolverContext solverCtx, AnalysisConfig anaConf, ConcolicValues preset) {
+  public InternalConstraintsTree(SolverContext solverCtx, ExplorationStrategy explorationStrategy, AnalysisConfig anaConf, ConcolicValues preset) {
     this.solverCtx = solverCtx;
+    
+    this.explorationStrategy = explorationStrategy;
+    this.explorationStrategy.initialize(this.solverCtx, this);
+    
     this.anaConf = anaConf;
     this.explore = anaConf.isExploreInitially();
     this.preset = preset;
@@ -141,7 +147,7 @@ public class InternalConstraintsTree {
     DecisionData data;
     try {
       if(!current.hasDecisionData())
-        data = new DecisionData(current, insn, decisions, explore);
+        data = this.explorationStrategy.buildDecisionData(current, insn, decisions, chosenIdx, explore);
       else {
         data = current.decisionData();
         data.verifyDecision(insn, decisions);
@@ -229,16 +235,15 @@ public class InternalConstraintsTree {
       diverged = false;
     }
     current = root;
-    while((currentTarget = backtrack(currentTarget, true)) != null) {
-      DecisionData dec = currentTarget.decisionData();
-      if(dec == null) {
-        assert currentTarget.isVirgin();
-        int ad = currentTarget.incAltDepth();
-        if(anaConf.maxAltDepthExceeded(ad) || anaConf.maxDepthExceeded(currentTarget.getDepth())) {
-          currentTarget.dontKnow();
-          //If we have reached depth limit, we look for a new node
-          continue;
-        }
+    while((currentTarget = explorationStrategy.findNextNode(currentTarget, expectedPath)) != null) {
+      assert currentTarget.isVirgin();
+      //Check that we have not exceeded the depth bound
+      int ad = currentTarget.incAltDepth();
+      if(anaConf.maxAltDepthExceeded(ad) || anaConf.maxDepthExceeded(currentTarget.getDepth())) {
+        //If we have, we look for a new node
+        currentTarget.dontKnow();
+        continue;
+      } else {     
         Valuation val = new Valuation();
         logger.finer("Finding new valuation");
         Result res = solverCtx.solve(val);
@@ -252,16 +257,16 @@ public class InternalConstraintsTree {
           currentTarget.dontKnow();
           break;
         case SAT:
-        	Node predictedTarget = simulate(val);
-        	if(predictedTarget != null && predictedTarget != currentTarget) {
-        		boolean inconclusive = predictedTarget.isExhausted();
-        		logger.info("Predicted ", inconclusive ? "inconclusive " : "", "divergence");
-        		if(inconclusive) {
-        			logger.finer("NOT attempting execution");
-        			currentTarget.dontKnow();
-        			break;
-        		}
-        	}
+          Node predictedTarget = simulate(val);
+          if(predictedTarget != null && predictedTarget != currentTarget) {
+            boolean inconclusive = predictedTarget.isExhausted();
+            logger.finer("Predicted ", inconclusive ? "inconclusive " : "", "divergence");
+            if(inconclusive) {
+              logger.finer("NOT attempting execution");
+              currentTarget.dontKnow();
+              break;
+            }
+          }
           if (val.equals(prev)) {
             logger.finer("Wont re-execute with known valuation");
             currentTarget.dontKnow();
@@ -269,23 +274,6 @@ public class InternalConstraintsTree {
           }
           prev = val;
           return ExpressionUtil.combineValuations(val);
-        }
-      }
-      else {
-        int nextIdx = dec.nextOpenChild();
-        assert (nextIdx != -1);
-        Expression<Boolean> constraint = dec.getConstraint(nextIdx);
-        Node c = dec.getChild(nextIdx);
-        currentTarget = c;
-        solverCtx.push();
-        expectedPath.add(nextIdx);
-        try {
-          solverCtx.add(constraint);
-        }
-        catch(Exception ex) {
-          logger.finer(ex.getMessage());           
-          // ex.printStackTrace();
-          //currentTarget.dontKnow(); // TODO good idea?
         }
       }
     }
