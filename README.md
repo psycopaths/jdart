@@ -70,7 +70,7 @@ in `src/examples/simple`. JDart can be run on these examples using the `jpf` bin
 /path/to/jpf-core/bin/jpf src/examples/simple/test_foo.jpf
 ```
 Make sure that the `JVM_ARGS` environment variable is set correctly (cf. the instructions
-for installing *jpf-constraints*).
+for installing *jConstraints*).
 
 ## Concolic Execution Configuration ##
 Every concolic execution must be part of the regular execution of a Java program. Hence,
