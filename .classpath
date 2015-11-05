@@ -13,7 +13,6 @@
 	<classpathentry kind="lib" path="lib/antlr-3.4-complete.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/guava-14.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/jConstraints-z3-1.0-SNAPSHOT.jar" sourcepath="/jConstraints-z3"/>
 	<classpathentry kind="lib" path="lib/ST-4.0.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
