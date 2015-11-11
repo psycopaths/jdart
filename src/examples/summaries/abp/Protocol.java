@@ -19,8 +19,8 @@ package summaries.abp;
 import gov.nasa.jpf.jdart.Symbolic;
 
 /** This example is a modified version from:
- *  Automata Learning with Automated Alphabet Abstraction Reﬁnement
- *  Falk Howar, Bernhard Steﬀen, and Maik Merten
+ *  Automata Learning with Automated Alphabet Abstraction Refinement
+ *  Falk Howar, Bernhard Steffen, and Maik Merten
  *  VMCAI 2011
  */
 

@@ -17,7 +17,7 @@ package gov.nasa.jpf.jdart.regressions.uncalled;
 
 
 /** This example is a modified version from:
- *  Automata Learning with Automated Alphabet Abstraction Reﬁnement
+ *  Automata Learning with Automated Alphabet Abstraction Refinement
  *  Falk Howar, Bernhard Steffen, and Maik Merten
  *  VMCAI 2011
  */
