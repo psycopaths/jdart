@@ -22,7 +22,7 @@ import gov.nasa.jpf.jdart.constraints.PostCondition;
 import gov.nasa.jpf.vm.ElementInfo;
 import gov.nasa.jpf.vm.StackFrame;
 
-class SymbolicArrayElem<T> extends SymbolicVariable<T> {
+public class SymbolicArrayElem<T> extends SymbolicVariable<T> {
   
   private final ElementInfo arrayElem;
   private final int slotId;
@@ -39,7 +39,7 @@ class SymbolicArrayElem<T> extends SymbolicVariable<T> {
     initVal.setCastedValue(variable, value);
     arrayElem.defreeze();
     arrayElem.setElementAttr(slotId, variable);
-    arrayElem.freeze();
+    arrayElem.freeze(); //TODO: Kasper: not sure if we should freeze again
   }
 
   @Override
@@ -48,7 +48,7 @@ class SymbolicArrayElem<T> extends SymbolicVariable<T> {
     arrayElem.defreeze();
     ConcolicUtil.setArrayElement(arrayElem, slotId, variable.getType(), value);
     arrayElem.setElementAttr(slotId, variable);
-    arrayElem.freeze();
+    arrayElem.freeze(); //TODO: Kasper: not sure if we should freeze again
   }
 
   @Override

@@ -18,6 +18,7 @@ package gov.nasa.jpf.jdart.objects;
 import gov.nasa.jpf.constraints.api.Variable;
 import gov.nasa.jpf.constraints.types.Type;
 import gov.nasa.jpf.jdart.ConcolicUtil;
+import gov.nasa.jpf.jdart.SymbolicArrayElem;
 import gov.nasa.jpf.jdart.SymbolicField;
 import gov.nasa.jpf.jdart.SymbolicParam;
 import gov.nasa.jpf.jdart.SymbolicVariable;
@@ -153,6 +154,12 @@ public class SymbolicObjectsContext {
     ei.setObjectAttr(attr);
     doProcessObject(ei, name);
     //ei.freeze();
+  }
+  
+  public void processArrayElement(Variable<?> var, ElementInfo arrayElem, int slotId) {
+    logger.finest("processing array element " + var.getName());
+    SymbolicArrayElem<?> symVar = new SymbolicArrayElem<>(var, arrayElem, slotId);
+    symbolicVars.put(symVar.getVariable().getName(), symVar);
   }
   
   private SymbolicObjectHandler getSymbolicObjectHandler(ClassInfo ci) {

@@ -18,6 +18,7 @@ package gov.nasa.jpf.jdart.objects;
 import gov.nasa.jpf.constraints.api.Variable;
 import gov.nasa.jpf.constraints.types.Type;
 import gov.nasa.jpf.jdart.ConcolicUtil;
+import gov.nasa.jpf.jdart.SymbolicField;
 import gov.nasa.jpf.vm.ClassInfo;
 import gov.nasa.jpf.vm.ElementInfo;
 import gov.nasa.jpf.vm.Types;
@@ -56,6 +57,7 @@ class PrimitiveArrayHandler implements SymbolicObjectHandler {
     for(int i = 0; i < size; i++) {
       Variable<?> var = Variable.create(type, name + "[" + i + "]");
       ei.setElementAttr(i, var);
+      ctx.processArrayElement(var, ei, i);
     }
     //ei.freeze();
   }
