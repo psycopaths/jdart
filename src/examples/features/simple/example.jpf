@@ -7,6 +7,8 @@ concolic.method.foo.config=all_fields_symbolic
 
 concolic.method.bar=features.simple.Input.bar(d:double)
 
+concolic.method.ctor=features.simple.Input.<init>(i:int)
+
 concolic.method.zoo=features.simple.Input.zoo(i:int,j:short,f:float)
 concolic.method.zoo.config=zoo
 
