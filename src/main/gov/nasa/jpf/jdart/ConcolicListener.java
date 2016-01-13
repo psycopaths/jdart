@@ -46,6 +46,16 @@ public class ConcolicListener extends Perturbator {
   }
 
 
+  @Override
+  public void propertyViolated(Search search) {
+    ThreadInfo ti = search.getVM().getCurrentThread();
+    ConcolicMethodExplorer ca = ConcolicMethodExplorer.getCurrentAnalysis(ti);
+    if(ca == null)
+      return;
+    ca.completePathError(ti);
+    ti.clearPendingException();
+  }
+  
 
   /**
    * Called on exit of a method. If the method is leaving
@@ -77,7 +87,6 @@ public class ConcolicListener extends Perturbator {
       ca.methodExited(ti, mi);
     }
   }
-
 
 
   /* ***************************************************************************
