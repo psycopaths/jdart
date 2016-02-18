@@ -15,6 +15,10 @@
  */
 package gov.nasa.jpf.jdart.objects;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import gov.nasa.jpf.JPF;
 import gov.nasa.jpf.util.JPFLogger;
 import gov.nasa.jpf.vm.ClassInfo;
@@ -49,11 +53,17 @@ class DefaultObjectHandler implements SymbolicObjectHandler {
       SymbolicObjectsContext ctx) {
     ClassInfo ci = ei.getClassInfo();
     logger.finest("Annotating object of class " + ci.getName());
-    FieldInfo[] fis;
-    if(ei instanceof StaticElementInfo)
-      fis = ci.getDeclaredStaticFields();
-    else
-      fis = ci.getDeclaredInstanceFields();
+    //FieldInfo[] fis;
+    Set<FieldInfo> fis = new HashSet<>();
+    if(ei instanceof StaticElementInfo) {
+      do {
+        fis.addAll(Arrays.asList(ci.getDeclaredStaticFields()));
+      } while((ci = ci.getSuperClass()) != null);
+    } else {
+      do {
+        fis.addAll(Arrays.asList(ci.getDeclaredInstanceFields()));
+      } while((ci = ci.getSuperClass()) != null);
+    }
     for(FieldInfo fi : fis) {
       ctx.processField(ei, fi, name + "." + fi.getName());
     }
