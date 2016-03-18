@@ -74,7 +74,7 @@ In summary:
 ## Installing JDart ##
 **Step 1:** Clone the `JDart` repository:
 ```bash
-$ git clone git@github.com:psycopaths/jdart.git
+$ git clone https://github.com/psycopaths/jdart.git
 ```
 
 **Step 2:** Make sure that your `site.properties` contains the appropriate entry for the `jpf-jdart`
