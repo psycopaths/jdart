@@ -28,7 +28,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     }
   end
   
-  config.vm.box = "debian/jessie64"
+  config.vm.box = "ubuntu/trusty64"
 
   config.vm.provider :libvirt do |domain|
     domain.uri = 'qemu+unix:///system'
@@ -42,5 +42,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   config.vm.synced_folder ".", "/home/vagrant/jdart-project/jdart"
 
-  config.vm.provision :shell, path: "scripts/install.sh"
+  config.vm.provision :shell, :privileged => false, path: "scripts/install.sh"
 end

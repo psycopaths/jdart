@@ -18,8 +18,11 @@
 # Exit on error
 set -e
 
-home=/home/vagrant
-project_root_dir=${home}/jdart-project
+user=vagrant
+# Directories
+home_dir=/home/${user}
+project_root_dir=${home_dir}/jdart-project
+sudo chown ${user}:${user} ${project_root_dir}
 
 # Set these flags to control what to install
 install_packages=1
@@ -27,27 +30,12 @@ install_z3=1
 install_jpf_core=1
 install_jdart=1
 
-# Directories
-z3_dir=$project_root_dir/z3
-
 
 if [ ${install_packages} -eq 1 ]; then
 
-    # Fixate the Debian mirror used
-    apt_source_file=/etc/apt/sources.list
-    sudo su -c "echo 'deb http://ftp.us.debian.org/debian jessie main' > ${apt_source_file}"
-    sudo su -c "echo 'deb-src http://ftp.us.debian.org/debian jessie main' >> ${apt_source_file}"
-
-    sudo su -c "echo 'deb http://security.debian.org/ jessie/updates main' >> ${apt_source_file}"
-    sudo su -c "echo 'deb-src http://security.debian.org/ jessie/updates main' >> ${apt_source_file}"
-
-    # Make sure Debian backports are enabled. This is needed for Java
-    # 8 packages
-    apt_source_file=/etc/apt/sources.list.d/debian-backports.list
-    sudo su -c "echo 'deb http://mirrors.kernel.org/debian jessie-backports main' >> ${apt_source_file}"
-    sudo su -c "echo 'deb-src http://mirrors.kernel.org/debian jessie-backports main' >> ${apt_source_file}"
-
+    sudo add-apt-repository -y ppa:openjdk-r/ppa
     sudo apt-get update
+
     dependencies="git mercurial ant ant-optional openjdk-8-jre openjdk-8-jre-headless openjdk-8-jdk antlr3 libguava-java python maven build-essential"
     sudo apt-get install --assume-yes $dependencies
 
@@ -72,20 +60,22 @@ fi
 
 if [ ${install_z3} -eq 1 ]; then
 
-    mkdir -p ${z3_dir}
-    cd ${project_root_dir}
-    z3_archive=z3-4.4.1.tar.gz
-    wget https://github.com/Z3Prover/z3/archive/${z3_archive}
-    tar xf ${z3_archive} --strip-components 1 --directory ${z3_dir}
-    rm ${z3_archive}
-    cd ${z3_dir}
-    
-    python scripts/mk_make.py --java
-    cd build
-    make all
-    sudo make install
-
+    z3_version="4.4.1"
+    z3_distro="x64-ubuntu-14.04"
+    z3_full_version=z3-${z3_version}-${z3_distro}
+    z3_archive=${z3_full_version}.zip
+    cd /tmp
+    wget https://github.com/Z3Prover/z3/releases/download/z3-${z3_version}/${z3_archive}
+    unzip ${z3_archive}
+    cd ${z3_full_version}/bin
     mvn install:install-file -Dfile=com.microsoft.z3.jar -DgroupId=com.microsoft -DartifactId=z3 -Dversion=0.9 -Dpackaging=jar
+    rm com.microsoft.z3.jar
+    sudo mv lib* /usr/lib/
+    sudo mv * /usr/bin
+    sudo mv ../include/* /usr/include
+
+    cd /tmp
+    rm -rf ${z3_archive} ${z3_full_version}
 fi
 
 # Install JPF modules
@@ -93,9 +83,9 @@ fi
 
 if [ ${install_jpf_core} -eq 1 ] || [ ${install_jdart} -eq 1 ]; then
 
-    jpf_conf_dir=${home}/.jpf
+    jpf_conf_dir=${home_dir}/.jpf
     mkdir -p $jpf_conf_dir
-    jpf_conf_file=${home}/.jpf/site.properties
+    jpf_conf_file=${home_dir}/.jpf/site.properties
 fi
 
 
@@ -112,7 +102,6 @@ if [ ${install_jpf_core} -eq 1 ]; then
     echo "jpf-core = ${jpf_core_dir}" >> ${jpf_conf_file}
 fi
 
-
 if [ ${install_jdart} -eq 1 ]; then
 
     # Install jconstraints
@@ -120,9 +109,8 @@ if [ ${install_jdart} -eq 1 ]; then
     git clone https://github.com/psycopaths/jconstraints.git ${jconstraints_dir}
     cd ${jconstraints_dir}
     mvn install
-
+    
     # Install jconstraints-z3
-    # export LD_LIBRARY_PATH=/usr/lib
     jconstraints_z3_dir=${project_root_dir}/jconstraints-z3
     git clone https://github.com/psycopaths/jconstraints-z3.git ${jconstraints_z3_dir}
     cd ${jconstraints_z3_dir}
@@ -130,9 +118,9 @@ if [ ${install_jdart} -eq 1 ]; then
 
     jconstraints_conf_dir=${project_root_dir}/.jconstraints
     mkdir -p ${jconstraints_conf_dir}/extensions
-    ln -s ${jconstraints_conf_dir} ${home}/.jconstraints || true
-    cp target/jConstraints-z3-1.0-SNAPSHOT.jar ${home}/.jconstraints/extensions
-    cp ${z3_dir}/build/com.microsoft.z3.jar ${home}/.jconstraints/extensions
+    ln -s ${jconstraints_conf_dir} ${home_dir}/.jconstraints || true
+    cp target/jConstraints-z3-1.0-SNAPSHOT.jar ${home_dir}/.jconstraints/extensions
+    cp ${home_dir}/.m2/repository/com/microsoft/z3/0.9/z3-0.9.jar ${home_dir}/.jconstraints/extensions/com.microsoft.z3.jar
 
     echo "jconstraints = $jconstraints_dir" >> ${jpf_conf_file}
 
