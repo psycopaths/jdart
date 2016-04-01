@@ -24,6 +24,19 @@ repeat experiments reported in the paper, use a
 [reproducible research environment in Aptlab][4].
 
 ## Installation ##
+If you want to install JDart in an easy way in a virtual machine,
+simply run:
+
+```bash
+vagrant up
+```
+
+The command will take about 20 minutes depending on your machine. For
+this to work you need [Vagrant][6] installed. Additionally, you need
+either [VirtualBox][7] or [libvirt][8]. The command above will
+automatically do all the steps described below, so you can skip to the
+Using JDart section.
+
 The prerequisites for JDart are:
 * JPF-core 8
 * jConstraints
@@ -114,3 +127,6 @@ The documentation for the concolic execution configuration can be found in the w
 [3]: https://github.com/psycopaths
 [4]: https://www.aptlab.net/p/CAVA/jdart-tacas-2016-v4
 [5]: https://github.com/psycopaths/jConstraints-z3
+[6]: https://www.vagrantup.com/
+[7]: https://www.virtualbox.org/
+[8]: https://libvirt.org/
