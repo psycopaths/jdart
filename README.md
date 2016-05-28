@@ -4,23 +4,11 @@ of concolic execution is to explore additional behavior in the program by genera
 input values which will result in a different path being taken through a program
 (or method).
 
-The concolic execution is triggered from within the regular execution of a Java
-program. The JDart configuration allows users to specify a method which is executed
-*concolically*: upon the first invocation of this method, a certain set of 
-values (see below) will be treated *symbolically*. Once the method execution is finished,
-an attempt will be made to find a valuation (i.e., an assignment of concrete values to
-the symbolic variables) which triggers a different execution path through the program.
+To cite JDart, please use the most recent paper that was accepted at TACAS 2016:
 
-The result of the concolic execution is a *constraints tree*, i.e., a tree with its inner
-nodes reflecting the decisions (involving at least one symbolic variable) that were made
-during the execution of the program. The leaves are labeled with the status (`OK` if the
-method was regularly exited, `ERROR` if there was an exception, or `DONT_KNOW` if no
-valuation could be or should have been generated for the respective path). In case
-the status in `OK` or `ERROR`, the leaf will also contain a concrete valuation suitable
-for triggering exactly this path through the concolically executed method.
+* Kasper Luckow, Marko Dimjasevic, Dimitra Giannakopoulou, Falk Howar, Malte Isberner, Temesghen Kahsai, Zvonimir Rakamaric, Vishwanath Raman, **JDart: A Dynamic Symbolic Analysis Framework**, 22nd International Conference on Tools and Algorithms for the Construction and Analysis of Systems (TACAS 2016), \[[pdf](http://soarlab.org/publications/tacas2016-ldghikrr.pdf)\] \[[bibtex](http://soarlab.org/publications/tacas2016-ldghikrr.bib)\].
 
-There is a paper under submission on JDart to TACAS 2016. If you want to
-repeat experiments reported in the paper, use a
+If you want to repeat experiments reported in the paper, use a
 [reproducible research environment in Aptlab][4].
 
 ## Installation ##
