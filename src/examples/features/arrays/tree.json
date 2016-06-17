@@ -1,0 +1,61 @@
+{
+  "branch": "",
+  "decision": "('i' != 0)",
+  "children": [
+    {
+      "branch": "true",
+      "decision": "('i' < 1)",
+      "children": [
+        {
+          "branch": "true",
+          "decision": "null",
+          "result": "OK: [ c[1]:='c[1]', c[2]:='c[2]', c[0]:='c[0]', c[5]:='c[5]', c[3]:='c[3]', c[4]:='c[4]',  ]"
+        },
+        {
+          "branch": "false",
+          "decision": "('i' > 4)",
+          "children": [
+            {
+              "branch": "true",
+              "decision": "null",
+              "result": "OK: [ c[1]:='c[1]', c[2]:='c[2]', c[0]:='c[0]', c[5]:='c[5]', c[3]:='c[3]', c[4]:='c[4]',  ]"
+            },
+            {
+              "branch": "false",
+              "decision": "((sint32)'c[2]' == (sint32)'c[3]')",
+              "children": [
+                {
+                  "branch": "true",
+                  "decision": "null",
+                  "result": "OK: [ c[1]:='c[1]', c[2]:='c[2]', c[0]:='c[0]', c[5]:='c[5]', c[3]:='c[3]', c[4]:='c[4]',  ]"
+                },
+                {
+                  "branch": "false",
+                  "decision": "null",
+                  "result": "OK: [ c[1]:='c[1]', c[2]:='c[2]', c[0]:='c[0]', c[5]:='c[5]', c[3]:='c[3]', c[4]:='c[4]',  ]"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "false",
+      "decision": "((sint32)'c[0]' != (sint32)'c[1]')",
+      "children": [
+        {
+          "branch": "true",
+          "decision": "null",
+          "result": "OK: [ c[1]:='c[1]', c[2]:='c[2]', c[0]:='c[0]', c[5]:='c[5]', c[3]:='c[3]', c[4]:='c[4]',  ]"
+        },
+        {
+          "branch": "false",
+          "decision": "null",
+          "result": "OK: [ c[1]:='c[1]', c[2]:='c[2]', c[0]:='c[0]', c[5]:='c[5]', c[3]:='c[3]', c[4]:='c[4]',  ]"
+        }
+      ]
+    }
+  ]
+}
+

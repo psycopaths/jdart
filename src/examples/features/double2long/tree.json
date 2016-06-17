@@ -1,0 +1,61 @@
+{
+  "branch": "",
+  "decision": "('x' >= 0.0)",
+  "children": [
+    {
+      "branch": "true",
+      "decision": "((sint64)('x' / 10.0) >= 100)",
+      "children": [
+        {
+          "branch": "true",
+          "decision": "null",
+          "result": "DONT_KNOW"
+        },
+        {
+          "branch": "false",
+          "decision": "((sint64)('x' / 10.0) > -100)",
+          "children": [
+            {
+              "branch": "true",
+              "decision": "null",
+              "result": "OK: [  ]"
+            },
+            {
+              "branch": "false",
+              "decision": "null",
+              "result": "DONT_KNOW"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "branch": "false",
+      "decision": "((sint64)('x' * 10.0) >= 100)",
+      "children": [
+        {
+          "branch": "true",
+          "decision": "null",
+          "result": "DONT_KNOW"
+        },
+        {
+          "branch": "false",
+          "decision": "((sint64)('x' * 10.0) > -100)",
+          "children": [
+            {
+              "branch": "true",
+              "decision": "null",
+              "result": "OK: [  ]"
+            },
+            {
+              "branch": "false",
+              "decision": "null",
+              "result": "DONT_KNOW"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

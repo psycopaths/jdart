@@ -31,6 +31,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.io.PrintWriter;
+import java.io.File;
 
 import com.google.common.base.Predicate;
 
@@ -86,7 +88,7 @@ public class ConstraintsTree {
     }
     
     public String toString(boolean values, boolean postconditions) {
-      return toString("", values, postconditions);      
+      return toString("", values, postconditions);
     }
     
     private String toString(final String prefix, boolean values, boolean postconditions) {
@@ -105,6 +107,50 @@ public class ConstraintsTree {
       String ppFalse = prefix + ((prefix.length() < 1) ? "  " : "      ");
       ret += ppFalse + "+-[-]" + this.succFalse.toString(ppFalse, values, postconditions);
                     
+      return ret;
+    }
+
+    public void toJson() {
+      toJson(false, true);
+    }
+
+    private void toJson(boolean values, boolean postconditions) {
+      String tree = toJson("", "", values, postconditions);
+      
+      try(PrintWriter out = new PrintWriter("tree.json")){
+        out.println(tree);
+        out.close();
+      } catch (java.io.FileNotFoundException e) {
+        System.out.println("Cannot write json file.");
+      }
+    }
+
+    private String toJson(String prefix, String branch, boolean values, boolean postconditions) {
+      String oriPrefix = prefix;
+      String trailingComma = branch.equals("true") ? "," : "";
+      prefix += "  ";
+      if (isLeaf()) {
+        String ret = "{\n";
+        ret += prefix + "\"branch\": \"" + branch + "\",\n";
+        ret += prefix + "\"decision\": \"" + "null" + "\",\n";
+        ret += prefix + "\"result\": \"" + path.getPathResult().toJson(postconditions, values) + "\"\n";
+        ret += oriPrefix + "}" + trailingComma + "\n";
+        return ret;
+      }
+
+      String ret = "{\n" + prefix + "\"branch\": \"" + branch + "\",\n";
+      ret += prefix + "\"decision\": \"" + this.decision + "\",\n";
+      // add children
+      ret += prefix + "\"children\": [\n";
+      // add true branch
+      String ppTrue = prefix + "  ";
+      ret += ppTrue + this.succTrue.toJson(ppTrue, "true", values, postconditions);
+      // add false branch
+      String ppFalse = prefix + "  ";
+      ret += ppFalse + this.succFalse.toJson(ppFalse, "false", values, postconditions);
+
+      ret += prefix + "]\n";
+      ret += oriPrefix + "}" + trailingComma + "\n";
       return ret;
     }
     
@@ -167,10 +213,12 @@ public class ConstraintsTree {
     this.root = root;
   }
   
-  
-  
   public String toString(boolean values, boolean postconditions) {
     return root.toString(values, postconditions);
+  }
+
+  public void toJson() {
+    root.toJson();
   }
   
   /**

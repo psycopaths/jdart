@@ -1,0 +1,28 @@
+{
+  "branch": "",
+  "decision": "('i' <= 200000)",
+  "children": [
+    {
+      "branch": "true",
+      "decision": "null",
+      "result": "OK: [  ]"
+    },
+    {
+      "branch": "false",
+      "decision": "'b'",
+      "children": [
+        {
+          "branch": "true",
+          "decision": "null",
+          "result": "OK: [  ]"
+        },
+        {
+          "branch": "false",
+          "decision": "null",
+          "result": "ERROR: java.lang.AssertionError"
+        }
+      ]
+    }
+  ]
+}
+

@@ -257,6 +257,7 @@ public class JDart implements JPFShell {
         
         //logger.info("Initial valuation: ", ca.getInitialValuation());
         if (!config.getBoolean("jdart.tree.dont.print")) {
+          ca.getConstraintsTree().toJson();
           logger.info(ca.getConstraintsTree().toString(false, true));
         }        
         logger.info("----Constraints Tree Statistics---");

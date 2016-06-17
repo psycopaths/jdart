@@ -1,0 +1,39 @@
+{
+  "branch": "",
+  "decision": "('p' < 0.0)",
+  "children": [
+    {
+      "branch": "true",
+      "decision": "((6.0 * 'p') != ('p' * 'q'))",
+      "children": [
+        {
+          "branch": "true",
+          "decision": "null",
+          "result": "OK: [  ]"
+        },
+        {
+          "branch": "false",
+          "decision": "null",
+          "result": "OK: [  ]"
+        }
+      ]
+    },
+    {
+      "branch": "false",
+      "decision": "(('p' + 1.0) != ('p' * 'q'))",
+      "children": [
+        {
+          "branch": "true",
+          "decision": "null",
+          "result": "OK: [  ]"
+        },
+        {
+          "branch": "false",
+          "decision": "null",
+          "result": "OK: [  ]"
+        }
+      ]
+    }
+  ]
+}
+

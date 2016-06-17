@@ -1,0 +1,50 @@
+{
+  "branch": "",
+  "decision": "('i' <= 200000.0)",
+  "children": [
+    {
+      "branch": "true",
+      "decision": "null",
+      "result": "ERROR: features.fields.Input$TotallyPsyco"
+    },
+    {
+      "branch": "false",
+      "decision": "!'b'",
+      "children": [
+        {
+          "branch": "true",
+          "decision": "null",
+          "result": "ERROR: features.fields.Input$TotallyPsyco"
+        },
+        {
+          "branch": "false",
+          "decision": "('sin'((('i' - 'i') + 0.006468729731651178)) != 0.0)",
+          "children": [
+            {
+              "branch": "true",
+              "decision": "('cos'((('i' - 'i') + 0.006468729731651178)) != 0.0)",
+              "children": [
+                {
+                  "branch": "true",
+                  "decision": "null",
+                  "result": "ERROR: features.fields.Input$TotallyPsyco"
+                },
+                {
+                  "branch": "false",
+                  "decision": "null",
+                  "result": "DONT_KNOW"
+                }
+              ]
+            },
+            {
+              "branch": "false",
+              "decision": "null",
+              "result": "DONT_KNOW"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
