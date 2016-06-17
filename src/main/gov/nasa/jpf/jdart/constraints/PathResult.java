@@ -141,4 +141,19 @@ public class PathResult {
     }
   }
 
+  public String toJson() {
+    return toJson(true, false);
+  }
+  
+  public String toJson(boolean printDetails, boolean printValues) {
+    StringBuilder sb = new StringBuilder();
+    try {
+      print(sb, printDetails, printValues);
+      return sb.toString();
+    }
+    catch(IOException ex) {
+      throw new IllegalStateException();
+    }
+  }
+
 }
