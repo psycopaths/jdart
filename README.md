@@ -79,7 +79,7 @@ $ git clone https://github.com/psycopaths/jdart.git
 ```
 
 **Step 2:** Make sure that your `site.properties` contains the appropriate entry for the `jpf-jdart`
-property. You have additional JPF modules installed, but the minimum configuration for JDart should look like the following in `site.properties`: 
+property. You can have additional JPF modules installed, but the minimum configuration for JDart should look like the following in `site.properties`: 
 ```bash
 $ vim ~/.jpf/site.properties
 
@@ -90,7 +90,7 @@ jpf-jdart = /path/to/jdart
 extensions=${jpf-core}
 ```
 
-Note that the extensions property **is not** updated with the `jpf-jdart` property. This is intentional.
+Note that the extensions property **is not** updated with the `jpf-jdart` property. This is intentional. Instead, use the `@using = jpf-jdart` directive in your application `jpf` file. 
 
 **Step 3:** Installing JDart is as simple as just running the ant build ant build in the JDart directory:
 ```bash
@@ -101,10 +101,31 @@ $ ant
 You should now be ready to use JDart.
 
 ## Using JDart ##
+The analysis configuration is specified in a jpf application properties file. The minimum configuration required is:
+```
+@using = jpf-jdart
+
+# Specify the analysis shell. Can also be MethodSummarizer
+shell=gov.nasa.jpf.jdart.JDart
+
+# Specify the constraint solver. Can be any of the jConstraints solver plugins
+symbolic.dp=z3
+
+# Provide the fully qualified class name of the entry point of the SUT
+target=features.simple.Input
+
+# Set up the concolic method with symbolic/concrete parameters. See the wiki for more details
+concolic.method.bar=features.simple.Input.bar(d:double)
+
+# Specify the concolic method configuration object to use
+concolic.method=bar
+
+```
+
 For an example of how to configure JDart, please have a look at the `test_xxx.jpf` files
-in `src/examples/simple`. JDart can be run on these examples using the `jpf` binary in jpf-core:
+in `src/examples/features/simple`. JDart can be run on these examples using the `jpf` binary in jpf-core:
 ```bash
-$ /path/to/jpf-core/bin/jpf /path/to/jdart/src/examples/simple/test_foo.jpf
+$ /path/to/jpf-core/bin/jpf /path/to/jdart/src/examples/features/simple/test_foo.jpf
 ```
 
 The documentation for the concolic execution configuration can be found in the wiki.
