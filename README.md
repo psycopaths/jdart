@@ -105,7 +105,7 @@ The analysis configuration is specified in a jpf application properties file. Th
 ```
 @using = jpf-jdart
 
-# Specify the analysis shell. Can also be MethodSummarizer
+# Specify the analysis shell. JDart includes a couple of those in addition to the standard JDart shell, e.g., the MethodSummarizer
 shell=gov.nasa.jpf.jdart.JDart
 
 # Specify the constraint solver. Can be any of the jConstraints solver plugins
