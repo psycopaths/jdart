@@ -1,0 +1,6 @@
+@include=../../config/jdart.jpf
+
+
+target=features.tableswitch.Input
+
+concolic.method.switch=features.tableswitch.Input.tblSwitch(i:int)
