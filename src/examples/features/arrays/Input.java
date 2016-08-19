@@ -27,7 +27,7 @@ public class Input {
     for(int i =0; i < c.length; i++) {
       if(c[i] == '[') state = 1;
       else if (state == 1 & c[i] == '{') state = 2;
-      else if (state == 2 & c[i] == '<') state = 3;
+      else if (state == 2 & c[i] == '<') assert(false);
       else if (state == 3 & c[i] == '*')  {
         state = 4;
         if(c.length == 15) {

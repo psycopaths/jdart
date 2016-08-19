@@ -88,7 +88,7 @@ public class ConstraintsTree {
     }
     
     public String toString(boolean values, boolean postconditions) {
-      return toString("", values, postconditions);
+      return toString("", values, postconditions);      
     }
     
     private String toString(final String prefix, boolean values, boolean postconditions) {
@@ -555,7 +555,5 @@ public class ConstraintsTree {
     getDoneLeaves(n.succFalse, leaves);
     getDoneLeaves(n.succTrue, leaves);
   }
-  
-  
-  
+
 }
