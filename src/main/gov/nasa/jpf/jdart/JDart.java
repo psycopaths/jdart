@@ -259,9 +259,9 @@ public class JDart implements JPFShell {
         if (!config.getBoolean("jdart.tree.dont.print")) {
           logger.info(ca.getConstraintsTree().toString(false, true));
         }   
-  
         if (config.getBoolean("jdart.tree.json.print")) {
-          ca.getConstraintsTree().toJson(config.getProperty("jdart.tree.json.dir") + "/tree.json");
+          ca.getConstraintsTree().toJson(config.getProperty("jdart.tree.json.dir") + 
+            "/" + jpfConf.getProperty("jpf.app") + ".json");
         }
 
         logger.info("----Constraints Tree Statistics---");
