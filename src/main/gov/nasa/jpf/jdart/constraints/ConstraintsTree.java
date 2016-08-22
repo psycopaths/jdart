@@ -15,6 +15,7 @@
  */
 package gov.nasa.jpf.jdart.constraints;
 
+import com.google.gson.Gson;
 import gov.nasa.jpf.JPF;
 import gov.nasa.jpf.constraints.api.Expression;
 import gov.nasa.jpf.constraints.api.Variable;
@@ -25,11 +26,13 @@ import gov.nasa.jpf.constraints.expressions.PropositionalCompound;
 import gov.nasa.jpf.constraints.util.ExpressionUtil;
 import gov.nasa.jpf.constraints.util.MixedParamsException;
 import gov.nasa.jpf.util.JPFLogger;
-
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Predicate;
@@ -107,6 +110,47 @@ public class ConstraintsTree {
                     
       return ret;
     }
+
+    public void toJson(String filename) {
+      JsonNode root = toJson(false, true);
+      String tree = new Gson().toJson(root);
+
+      try(PrintWriter out = new PrintWriter(filename)) {
+        out.println(tree);
+      } catch (Exception ex) {
+        logger.severe("Could not write to json file: ", ex);
+      }
+    }
+
+    private JsonNode toJson(boolean values, boolean postconditions) {
+      JsonNode node = new JsonNode();
+      if(isLeaf()) {
+        node.setResult(path.getPathResult().toString(postconditions, values));
+        return node;
+      }
+      node.setDecison(this.decision);
+      node.setChildren(Arrays.asList(this.succTrue.toJson(values, postconditions), 
+        this.succFalse.toJson(values, postconditions)));
+      return node;
+    }
+
+    private class JsonNode {
+      private String decision;
+      private String result;
+      private List<JsonNode> children;
+
+      public void setDecison(Expression<Boolean> decision) {
+        this.decision = decision.toString();
+      }
+
+      public void setResult(String result) {
+        this.result = result;
+      }
+
+      public void setChildren(List<JsonNode> children) {
+        this.children = children;
+      }
+    }
     
     public Node strip(Predicate<? super PathResult> pred) {
       if(isLeaf()) {
@@ -167,10 +211,12 @@ public class ConstraintsTree {
     this.root = root;
   }
   
-  
-  
   public String toString(boolean values, boolean postconditions) {
     return root.toString(values, postconditions);
+  }
+
+  public void toJson(String filename) {
+    root.toJson(filename);
   }
   
   /**
@@ -507,7 +553,5 @@ public class ConstraintsTree {
     getDoneLeaves(n.succFalse, leaves);
     getDoneLeaves(n.succTrue, leaves);
   }
-  
-  
-  
+
 }
