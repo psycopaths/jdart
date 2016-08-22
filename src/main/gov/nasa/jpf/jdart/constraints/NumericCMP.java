@@ -144,7 +144,10 @@ public class NumericCMP extends AbstractExpression<Integer> {
   @Override
   public Type<Integer> getType() {
     return BuiltinTypes.SINT32;
-  }    
-  
-  
+  }
+
+  @Override
+  public void printMalformedExpression(Appendable a, int flags) throws IOException {
+    // Do nothing
+  }
 }
