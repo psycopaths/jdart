@@ -68,7 +68,7 @@ if [ ${install_z3} -eq 1 ]; then
     wget https://github.com/Z3Prover/z3/releases/download/z3-${z3_version}/${z3_archive}
     unzip ${z3_archive}
     cd ${z3_full_version}/bin
-    mvn install:install-file -Dfile=com.microsoft.z3.jar -DgroupId=com.microsoft -DartifactId=z3 -Dversion=0.9 -Dpackaging=jar
+    mvn install:install-file -Dfile=com.microsoft.z3.jar -DgroupId=com.microsoft -DartifactId=z3 -Dversion=${z3_version} -Dpackaging=jar
     rm com.microsoft.z3.jar
     sudo mv lib* /usr/lib/
     sudo mv * /usr/bin
@@ -120,7 +120,7 @@ if [ ${install_jdart} -eq 1 ]; then
     mkdir -p ${jconstraints_conf_dir}/extensions
     ln -s ${jconstraints_conf_dir} ${home_dir}/.jconstraints || true
     cp target/jConstraints-z3-1.0-SNAPSHOT.jar ${home_dir}/.jconstraints/extensions
-    cp ${home_dir}/.m2/repository/com/microsoft/z3/0.9/z3-0.9.jar ${home_dir}/.jconstraints/extensions/com.microsoft.z3.jar
+    cp ${home_dir}/.m2/repository/com/microsoft/z3/${z3_version}/z3-${z3_version}.jar ${home_dir}/.jconstraints/extensions/com.microsoft.z3.jar
 
     echo "jconstraints = $jconstraints_dir" >> ${jpf_conf_file}
 
