@@ -15,6 +15,7 @@
  */
 package gov.nasa.jpf.jdart.constraints;
 
+import com.google.gson.Gson;
 import gov.nasa.jpf.JPF;
 import gov.nasa.jpf.constraints.api.Expression;
 import gov.nasa.jpf.constraints.api.Variable;
@@ -25,14 +26,14 @@ import gov.nasa.jpf.constraints.expressions.PropositionalCompound;
 import gov.nasa.jpf.constraints.util.ExpressionUtil;
 import gov.nasa.jpf.constraints.util.MixedParamsException;
 import gov.nasa.jpf.util.JPFLogger;
-
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
-import java.io.PrintWriter;
-import java.io.File;
 
 import com.google.common.base.Predicate;
 
@@ -110,48 +111,45 @@ public class ConstraintsTree {
       return ret;
     }
 
-    public void toJson() {
-      toJson(false, true);
-    }
+    public void toJson(String filename) {
+      JsonNode root = toJson(false, true);
+      String tree = new Gson().toJson(root);
 
-    private void toJson(boolean values, boolean postconditions) {
-      String tree = toJson("", "", values, postconditions);
-      
-      try(PrintWriter out = new PrintWriter("tree.json")){
+      try(PrintWriter out = new PrintWriter(filename)) {
         out.println(tree);
-        out.close();
-      } catch (java.io.FileNotFoundException e) {
-        System.out.println("Cannot write json file.");
+      } catch (Exception ex) {
+        logger.severe("Could not write to json file: ", ex);
       }
     }
 
-    private String toJson(String prefix, String branch, boolean values, boolean postconditions) {
-      String oriPrefix = prefix;
-      String trailingComma = branch.equals("true") ? "," : "";
-      prefix += "  ";
-      if (isLeaf()) {
-        String ret = "{\n";
-        ret += prefix + "\"branch\": \"" + branch + "\",\n";
-        ret += prefix + "\"decision\": \"" + "null" + "\",\n";
-        ret += prefix + "\"result\": \"" + path.getPathResult().toJson(postconditions, values) + "\"\n";
-        ret += oriPrefix + "}" + trailingComma + "\n";
-        return ret;
+    private JsonNode toJson(boolean values, boolean postconditions) {
+      JsonNode node = new JsonNode();
+      if(isLeaf()) {
+        node.setResult(path.getPathResult().toString(postconditions, values));
+        return node;
+      }
+      node.setDecison(this.decision);
+      node.setChildren(Arrays.asList(this.succTrue.toJson(values, postconditions), 
+        this.succFalse.toJson(values, postconditions)));
+      return node;
+    }
+
+    private class JsonNode {
+      private String decision;
+      private String result;
+      private List<JsonNode> children;
+
+      public void setDecison(Expression<Boolean> decision) {
+        this.decision = decision.toString();
       }
 
-      String ret = "{\n" + prefix + "\"branch\": \"" + branch + "\",\n";
-      ret += prefix + "\"decision\": \"" + this.decision + "\",\n";
-      // add children
-      ret += prefix + "\"children\": [\n";
-      // add true branch
-      String ppTrue = prefix + "  ";
-      ret += ppTrue + this.succTrue.toJson(ppTrue, "true", values, postconditions);
-      // add false branch
-      String ppFalse = prefix + "  ";
-      ret += ppFalse + this.succFalse.toJson(ppFalse, "false", values, postconditions);
+      public void setResult(String result) {
+        this.result = result;
+      }
 
-      ret += prefix + "]\n";
-      ret += oriPrefix + "}" + trailingComma + "\n";
-      return ret;
+      public void setChildren(List<JsonNode> children) {
+        this.children = children;
+      }
     }
     
     public Node strip(Predicate<? super PathResult> pred) {
@@ -217,8 +215,8 @@ public class ConstraintsTree {
     return root.toString(values, postconditions);
   }
 
-  public void toJson() {
-    root.toJson();
+  public void toJson(String filename) {
+    root.toJson(filename);
   }
   
   /**

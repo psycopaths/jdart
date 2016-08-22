@@ -140,16 +140,5 @@ public class PathResult {
       throw new IllegalStateException();
     }
   }
-  
-  public String toJson(boolean printDetails, boolean printValues) {
-    StringBuilder sb = new StringBuilder();
-    try {
-      print(sb, printDetails, printValues);
-      return sb.toString();
-    }
-    catch(IOException ex) {
-      throw new IllegalStateException();
-    }
-  }
 
 }
