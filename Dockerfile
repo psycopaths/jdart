@@ -60,8 +60,8 @@ RUN mvn install
 
 # Set up jpf conf and jconstraints
 RUN mkdir /root/.jpf
-RUN echo "jpf-core = /jpf-core" >> /root/.jpf/jpf.properties
-RUN echo "jpf-jdart = /jdart" >> /root/.jpf/jpf.properties
+RUN echo "jpf-core = /jdart-project/jpf-core" >> /root/.jpf/jpf.properties
+RUN echo "jpf-jdart = /jdart-project/jdart" >> /root/.jpf/jpf.properties
 RUN echo "extensions=\${jpf-core}" >> /root/.jpf/jpf.properties
 
 RUN mkdir -p /root/.jconstraints/extensions
