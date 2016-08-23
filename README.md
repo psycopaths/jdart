@@ -38,7 +38,7 @@ $ vagrant up
 The command will take about 20 minutes depending on your machine.
 
 
-### Installing Locally
+### Installing JDart Locally
 The prerequisites for JDart are:
 * JPF-core 8
 * jConstraints
