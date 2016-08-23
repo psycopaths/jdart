@@ -17,7 +17,7 @@ There are two different ways of installing JDart:
 * Installation on local machine
 
 With Docker or Vagrant, all the installation steps are automatically performed, creating a complete environment that can be used to run JDart.
-You can skip to the [Using JDart](#Using JDart) section.
+You can skip to the [Using JDart](#using-jdart) section.
 
 ### Docker
 Assuming you have [Docker][9] installed, simply run:
