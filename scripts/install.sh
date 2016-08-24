@@ -108,18 +108,20 @@ if [ ${install_jdart} -eq 1 ]; then
     jconstraints_dir=${project_root_dir}/jconstraints
     git clone https://github.com/psycopaths/jconstraints.git ${jconstraints_dir}
     cd ${jconstraints_dir}
+    git checkout jconstraints-0.9.1
     mvn install
     
     # Install jconstraints-z3
     jconstraints_z3_dir=${project_root_dir}/jconstraints-z3
     git clone https://github.com/psycopaths/jconstraints-z3.git ${jconstraints_z3_dir}
     cd ${jconstraints_z3_dir}
+    git checkout jconstraints-z3-0.9.0
     mvn install
 
     jconstraints_conf_dir=${project_root_dir}/.jconstraints
     mkdir -p ${jconstraints_conf_dir}/extensions
     ln -s ${jconstraints_conf_dir} ${home_dir}/.jconstraints || true
-    cp target/jConstraints-z3-1.0-SNAPSHOT.jar ${home_dir}/.jconstraints/extensions
+    cp target/jconstraints-z3-0.9.0.jar ${home_dir}/.jconstraints/extensions
     cp ${home_dir}/.m2/repository/com/microsoft/z3/${z3_version}/z3-${z3_version}.jar ${home_dir}/.jconstraints/extensions/com.microsoft.z3.jar
 
     echo "jconstraints = $jconstraints_dir" >> ${jpf_conf_file}
