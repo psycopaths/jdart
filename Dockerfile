@@ -23,53 +23,55 @@ RUN \
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 ENV JUNIT_HOME /usr/share/java
 
-RUN mkdir jdart-project
+RUN mkdir /jdart-project
+ENV JDART_DIR /jdart-project
 
 # Install jpf-core
-WORKDIR /jdart-project
+WORKDIR ${JDART_DIR}
 RUN hg clone http://babelfish.arc.nasa.gov/hg/jpf/jpf-core 
 # We know that rev 29 works with jdart
-WORKDIR /jdart-project/jpf-core
+WORKDIR ${JDART_DIR}/jpf-core
 RUN hg update -r 29
 RUN ant 
 #Could run ant test here but it takes a long time 
-#RUN java -jar build/RunJPF.jar src/examples/Racer.jpf
 
 # Install jConstraints
-WORKDIR /jdart-project
+WORKDIR ${JDART_DIR}
 RUN git clone https://github.com/psycopaths/jconstraints.git
-WORKDIR /jdart-project/jconstraints
+WORKDIR ${JDART_DIR}/jconstraints
+RUN git checkout jconstraints-0.9.1
 RUN mvn install
 
 # Install Z3
-WORKDIR /jdart-project
+WORKDIR ${JDART_DIR}
 # Note that we specify a specific *release* of Z3
 RUN wget https://github.com/Z3Prover/z3/releases/download/z3-4.4.1/z3-4.4.1-x64-ubuntu-14.04.zip 
 RUN unzip z3-4.4.1-x64-ubuntu-14.04.zip && \
         rm z3-4.4.1-x64-ubuntu-14.04.zip
 RUN ln -s z3-4.4.1-x64-ubuntu-14.04 z3
-WORKDIR /jdart-project/z3/bin
+WORKDIR ${JDART_DIR}/z3/bin
 RUN mvn install:install-file -Dfile=com.microsoft.z3.jar -DgroupId=com.microsoft -DartifactId=z3 -Dversion=4.4.1 -Dpackaging=jar
-ENV LD_LIBRARY_PATH /jdart-project/z3/bin
+ENV LD_LIBRARY_PATH ${JDART_DIR}/z3/bin
 
 # install jconstraints-z3
-WORKDIR /jdart-project
+WORKDIR ${JDART_DIR}
 RUN git clone https://github.com/psycopaths/jconstraints-z3.git 
-WORKDIR /jdart-project/jconstraints-z3
+WORKDIR ${JDART_DIR}/jconstraints-z3
+RUN git checkout jconstraints-z3-0.9.0
 RUN mvn install
 
 # Set up jpf conf and jconstraints
 RUN mkdir /root/.jpf
-RUN echo "jpf-core = /jdart-project/jpf-core" >> /root/.jpf/jpf.properties
-RUN echo "jpf-jdart = /jdart-project/jdart" >> /root/.jpf/jpf.properties
-RUN echo "extensions=\${jpf-core}" >> /root/.jpf/jpf.properties
+RUN echo "jpf-core = ${JDART_DIR}/jpf-core" >> /root/.jpf/site.properties
+RUN echo "jpf-jdart = ${JDART_DIR}/jdart" >> /root/.jpf/site.properties
+RUN echo "extensions=\${jpf-core}" >> /root/.jpf/site.properties
 
 RUN mkdir -p /root/.jconstraints/extensions
-RUN cp /jdart-project/jconstraints-z3/target/jConstraints-z3-1.0-SNAPSHOT.jar /root/.jconstraints/extensions
+RUN cp ${JDART_DIR}/jconstraints-z3/target/jconstraints-z3-0.9.0.jar /root/.jconstraints/extensions
 RUN cp /root/.m2/repository/com/microsoft/z3/4.4.1/z3-4.4.1.jar /root/.jconstraints/extensions/com.microsoft.z3.jar
 
 # Install JDart
-WORKDIR /jdart-project
+WORKDIR ${JDART_DIR}
 RUN git clone https://github.com/psycopaths/jdart.git 
-WORKDIR /jdart-project/jdart
+WORKDIR ${JDART_DIR}/jdart
 RUN ant
