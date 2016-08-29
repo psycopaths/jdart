@@ -1,5 +1,9 @@
 FROM ubuntu:14.04
 MAINTAINER Kasper Luckow <kasper.luckow@sv.cmu.edu>
+
+#############################################################################
+# Setup base image 
+#############################################################################
 RUN \
   apt-get update -y && \
   apt-get install software-properties-common -y && \
@@ -19,12 +23,20 @@ RUN \
   rm -rf /var/lib/apt/lists/* && \
   rm -rf /var/cache/oracle-jdk8-installer
 
+#############################################################################
+# Environment 
+#############################################################################
+
 # set java env
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 ENV JUNIT_HOME /usr/share/java
 
 RUN mkdir /jdart-project
 ENV JDART_DIR /jdart-project
+
+#############################################################################
+# Dependencies 
+#############################################################################
 
 # Install jpf-core
 WORKDIR ${JDART_DIR}
@@ -70,7 +82,10 @@ RUN mkdir -p /root/.jconstraints/extensions
 RUN cp ${JDART_DIR}/jconstraints-z3/target/jconstraints-z3-0.9.0.jar /root/.jconstraints/extensions
 RUN cp /root/.m2/repository/com/microsoft/z3/4.4.1/z3-4.4.1.jar /root/.jconstraints/extensions/com.microsoft.z3.jar
 
+#############################################################################
 # Install JDart
+#############################################################################
+
 WORKDIR ${JDART_DIR}
 RUN git clone https://github.com/psycopaths/jdart.git 
 WORKDIR ${JDART_DIR}/jdart
