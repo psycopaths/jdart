@@ -3,3 +3,4 @@ bin/*
 *.class
 *.orig
 *.DS_Store
+/bin/
