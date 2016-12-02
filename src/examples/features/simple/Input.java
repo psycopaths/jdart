@@ -39,8 +39,18 @@ public class Input {
 	
 
   private int i64;
+
+  public Input(int a, int b) {
+
+    this.i64 = 64;
+  }
   
   public Input(int i) {
+    if(i > 10) {
+      System.err.println("\n-------- In <Init>(int)! i > 10");
+    } else {
+      System.err.println("\n-------- In <Init>(int! i <= 10");
+    }
     this.i64 = 64;
   }
   

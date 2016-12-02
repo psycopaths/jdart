@@ -16,6 +16,9 @@ concolic.method.baz.config=baz
 concolic.method.xyz=features.simple.Input.xyz(m:java.util.Map)
 concolic.method.xyz.config=xyz
 
+concolic.method.ctor=features.simple.Input.<init>(i:int)
+concolic.method.ctor.config=ctor
+
 jdart.configs.xyz.symbolic.include=m[*
 
 jdart.configs.baz.symbolic.include=d.*

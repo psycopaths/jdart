@@ -1,7 +1,3 @@
+@include=./example.jpf
 
-@include=../../config/jdart.jpf
-
-target=features.simple.Input
-concolic.method=features.simple.Input.<init>(i:int)
-
-
+concolic.method=ctor
