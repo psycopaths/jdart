@@ -346,8 +346,27 @@ public class ConcolicUtil {
     // default behavior
     return frame.peek(stackPos);
   }
-  
-  
+
+  public static Pair<Integer> getLocalAttrInt(StackFrame sf, int index) {
+    final int conc = sf.getLocalVariable(index);
+    final Expression<?> symb = (Expression<?>) sf.getLocalAttr(index);
+    Expression<Integer> isymb;
+    if (symb == null) {
+      isymb = Constant.create(BuiltinTypes.SINT32, conc);
+    }
+    else if (symb.getType().equals(BuiltinTypes.SINT32)) {
+      isymb = symb.requireAs(BuiltinTypes.SINT32);
+    }
+    else {
+      isymb = CastExpression.create(symb, BuiltinTypes.SINT32);
+    }
+    return Pair.create(conc, isymb);    
+  }
+
+  public static void setLocalAttrInt(StackFrame sf, int index, Pair<Integer> pair) {
+    sf.setLocalVariable(index, pair.conc);
+    sf.setLocalAttr(index, pair.symb);
+  }  
   
   public static void setOperandAttr(StackFrame sf, int stackPos, Type<?> type, Object value) {
     if(BuiltinTypes.SINT64.equals(type) || BuiltinTypes.DOUBLE.equals(type))
