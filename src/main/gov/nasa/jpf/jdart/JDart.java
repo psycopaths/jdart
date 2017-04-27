@@ -419,7 +419,8 @@ public class JDart implements JPFShell {
           // Error constraints
           Iterator<Path> errorPathsIter = ca.getConstraintsTree().getErrorPaths().iterator();
           while(errorPathsIter.hasNext()) {
-            csvEntry.append(errorPathsIter.next().getPathCondition().toString());
+            //csvEntry.append(errorPathsIter.next().getPathCondition().toString());
+            csvEntry.append(errorPathsIter.next().getExceptionClass());
             if(errorPathsIter.hasNext()) {
               csvEntry.append(ELEMENT_SEPARATOR);
             }
