@@ -30,19 +30,29 @@ import gov.nasa.jpf.util.LogHandler;
 import gov.nasa.jpf.util.LogManager;
 import gov.nasa.jpf.util.SimpleProfiler;
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
+
+import com.google.common.base.Stopwatch;
 
 /**
  * The actual jdart jpf-shell to be started from config files.
@@ -50,6 +60,7 @@ import java.util.logging.SimpleFormatter;
 public class JDart implements JPFShell {
 
   public static final String CONFIG_KEY_CONCOLIC_EXPLORER = "jdart.concolic_explorer_instance";
+  public static final String CONFIG_KEY_STATISTICS = "jdart.statistics";
 
   private final Config config;
   private final ConcolicConfig cc;
@@ -201,12 +212,18 @@ public class JDart implements JPFShell {
     logger.finest("============ End JPF Config ============");
 
     // run jpf ...
+    long start = System.currentTimeMillis();
     JPF jpf = new JPF(jpfConf);
     SimpleProfiler.start("JDART-run");
     SimpleProfiler.start("JPF-boot"); // is stopped upon searchStarted in ConcolicListener
-    jpf.run();
+    Exception jpfException = null;
+    try {
+      jpf.run();
+    } catch(Exception e) {
+      jpfException = e;
+    }
     SimpleProfiler.stop("JDART-run");
-
+    long end = System.currentTimeMillis();
     // post process ...    
     logger.finest("JDart.run() -- end");
     logger.info("Profiling:\n" + SimpleProfiler.getResults());
@@ -314,13 +331,118 @@ public class JDart implements JPFShell {
         }
         logger.info("--------------------------------");
       }
-    }
+    }    
 
     if (printStream != null) {
       try {
         printStream.close();
       } catch (Exception ex) {
         logger.severe(ex);
+      }
+    }
+
+    // Create csv file with statistics. We should refactor this class in general...
+    if(config.containsKey(CONFIG_KEY_STATISTICS)) {
+      File outputFile = new File(config.getString(CONFIG_KEY_STATISTICS));
+
+      final String CSV_SEPARATOR = ";";
+      final String ELEMENT_SEPARATOR = "~";
+      
+      if(!outputFile.exists()) {
+        try {
+          outputFile.createNewFile();
+        } catch (IOException e1) {
+          throw new RuntimeException(e1);
+        }
+        
+        //write csv header
+        try(FileWriter fw = new FileWriter(outputFile, true)) {
+          fw.write("Target" + CSV_SEPARATOR + 
+              "Method" + CSV_SEPARATOR +
+              "SymbolicVar" + CSV_SEPARATOR +
+              "AnalysisTime" + CSV_SEPARATOR +
+              "EndTime" + CSV_SEPARATOR +
+              "OK" + CSV_SEPARATOR +
+              "ERROR" + CSV_SEPARATOR +
+              "DK" + CSV_SEPARATOR +
+              "Crash" + CSV_SEPARATOR +
+              "ErrorConstraints" + CSV_SEPARATOR +
+              "DKConstraints" + 
+              "\n");
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      }
+
+      for (Map.Entry<String, List<CompletedAnalysis>> e : ce.getCompletedAnalyses().entrySet()) {
+        for (CompletedAnalysis ca : e.getValue()) {
+          if (ca.getConstraintsTree() == null) {
+            logger.info("tree is null");
+            continue;
+          }
+          StringBuilder csvEntry = new StringBuilder();
+          
+          // Target
+          csvEntry.append(config.getString("target") + CSV_SEPARATOR);
+          String id = e.getKey();
+          ConcolicMethodConfig mc = cc.getMethodConfig(id);
+          
+          // method signature
+          csvEntry.append(mc.toString() + CSV_SEPARATOR);
+          
+          // symbolic vars
+          csvEntry.append(ca.getConstraintsTree().getVariables().size() + CSV_SEPARATOR);
+          
+          // analysis time
+          long elapsed = (end - start)/1000;
+          csvEntry.append(elapsed + "s" + CSV_SEPARATOR);
+          
+          // Date
+          DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+          java.util.Date date = new java.util.Date();
+          csvEntry.append(dateFormat.format(date) + CSV_SEPARATOR);
+          
+          // Ok
+          csvEntry.append(ca.getConstraintsTree().getCoveredPaths().size() + CSV_SEPARATOR);
+          // ERROR
+          csvEntry.append(ca.getConstraintsTree().getErrorPaths().size() + CSV_SEPARATOR);
+          // DK
+          csvEntry.append(ca.getConstraintsTree().getDontKnowPaths().size() + CSV_SEPARATOR);
+          
+          // jpf crash
+          if(jpfException != null) {
+            csvEntry.append(jpfException.getMessage() + CSV_SEPARATOR);
+          } else {
+            csvEntry.append(CSV_SEPARATOR);
+          }
+          
+          // Error constraints
+          Iterator<Path> errorPathsIter = ca.getConstraintsTree().getErrorPaths().iterator();
+          while(errorPathsIter.hasNext()) {
+            csvEntry.append(errorPathsIter.next().getPathCondition().toString());
+            if(errorPathsIter.hasNext()) {
+              csvEntry.append(ELEMENT_SEPARATOR);
+            }
+          }
+          csvEntry.append(CSV_SEPARATOR);
+          
+          // DK constraints
+          Iterator<Path> dkPathsIter = ca.getConstraintsTree().getDontKnowPaths().iterator();
+          while(dkPathsIter.hasNext()) {
+            csvEntry.append(dkPathsIter.next().getPathCondition().toString());
+            if(dkPathsIter.hasNext()) {
+              csvEntry.append(ELEMENT_SEPARATOR);
+            }
+          }
+          csvEntry.append("\n");
+          
+          // write to file
+          try(FileWriter fw = new FileWriter(outputFile, true)) {
+            fw.write(csvEntry.toString());
+          } catch (IOException e2) {
+            throw new RuntimeException(e2);
+          }
+        }
       }
     }
 
