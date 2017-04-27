@@ -60,8 +60,8 @@ import com.google.common.base.Stopwatch;
 public class JDart implements JPFShell {
 
   public static final String CONFIG_KEY_CONCOLIC_EXPLORER = "jdart.concolic_explorer_instance";
-  public static final String CONFIG_KEY_STATISTICS = "jdart.statistics";
-
+  public static final String CONFIG_KEY_STATISTICS = "jdart.statistics"; 
+  public static final String CONFIG_KEY_STATISTICS_ID = "jdart.statistics.id";
   private final Config config;
   private final ConcolicConfig cc;
 
@@ -357,7 +357,8 @@ public class JDart implements JPFShell {
         
         //write csv header
         try(FileWriter fw = new FileWriter(outputFile, true)) {
-          fw.write("Target" + CSV_SEPARATOR + 
+          fw.write("ID" + CSV_SEPARATOR +
+              "Target" + CSV_SEPARATOR + 
               "Method" + CSV_SEPARATOR +
               "SymbolicVar" + CSV_SEPARATOR +
               "AnalysisTime" + CSV_SEPARATOR +
@@ -382,6 +383,9 @@ public class JDart implements JPFShell {
           }
           StringBuilder csvEntry = new StringBuilder();
           
+          // ID
+          csvEntry.append(config.getString(CONFIG_KEY_STATISTICS_ID) + CSV_SEPARATOR);
+        
           // Target
           csvEntry.append(config.getString("target") + CSV_SEPARATOR);
           String id = e.getKey();
