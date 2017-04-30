@@ -395,7 +395,7 @@ public class JDart implements JPFShell {
           csvEntry.append(mc.toString() + CSV_SEPARATOR);
           
           // symbolic vars
-          csvEntry.append(ca.getConstraintsTree().getVariables().size() + CSV_SEPARATOR);
+          csvEntry.append(ca.getMethodConfig().getParams().size() + CSV_SEPARATOR);
           
           // analysis time
           long elapsed = (end - start)/1000;
