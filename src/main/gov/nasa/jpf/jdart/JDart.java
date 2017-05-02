@@ -216,10 +216,10 @@ public class JDart implements JPFShell {
     JPF jpf = new JPF(jpfConf);
     SimpleProfiler.start("JDART-run");
     SimpleProfiler.start("JPF-boot"); // is stopped upon searchStarted in ConcolicListener
-    Exception jpfException = null;
+    Throwable jpfException = null;
     try {
       jpf.run();
-    } catch(Exception e) {
+    } catch(Throwable e) {
       jpfException = e;
     }
     SimpleProfiler.stop("JDART-run");
@@ -374,69 +374,71 @@ public class JDart implements JPFShell {
           throw new RuntimeException(e);
         }
       }
-
+      
       for (Map.Entry<String, List<CompletedAnalysis>> e : ce.getCompletedAnalyses().entrySet()) {
         for (CompletedAnalysis ca : e.getValue()) {
-          if (ca.getConstraintsTree() == null) {
-            logger.info("tree is null");
-            continue;
-          }
           StringBuilder csvEntry = new StringBuilder();
-          
-          // ID
-          csvEntry.append(config.getString(CONFIG_KEY_STATISTICS_ID) + CSV_SEPARATOR);
-        
-          // Target
-          csvEntry.append(config.getString("target") + CSV_SEPARATOR);
-          String id = e.getKey();
-          ConcolicMethodConfig mc = cc.getMethodConfig(id);
-          
-          // method signature
-          csvEntry.append(mc.toString() + CSV_SEPARATOR);
-          
-          // symbolic vars
-          csvEntry.append(ca.getMethodConfig().getParams().size() + CSV_SEPARATOR);
-          
-          // analysis time
-          long elapsed = (end - start)/1000;
-          csvEntry.append(elapsed + "s" + CSV_SEPARATOR);
-          
-          // Date
-          DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-          java.util.Date date = new java.util.Date();
-          csvEntry.append(dateFormat.format(date) + CSV_SEPARATOR);
-          
-          // Ok
-          csvEntry.append(ca.getConstraintsTree().getCoveredPaths().size() + CSV_SEPARATOR);
-          // ERROR
-          csvEntry.append(ca.getConstraintsTree().getErrorPaths().size() + CSV_SEPARATOR);
-          // DK
-          csvEntry.append(ca.getConstraintsTree().getDontKnowPaths().size() + CSV_SEPARATOR);
-          
-          // jpf crash
-          if(jpfException != null) {
-            csvEntry.append(jpfException.getMessage() + CSV_SEPARATOR);
-          } else {
-            csvEntry.append(CSV_SEPARATOR);
+          if (ca.getConstraintsTree() == null) {            
+            csvEntry.append("NOTREE" + CSV_SEPARATOR);
+            csvEntry.append(jpfException.getMessage());
+            logger.info("tree is null");
           }
-          
-          // Error constraints
-          Iterator<Path> errorPathsIter = ca.getConstraintsTree().getErrorPaths().iterator();
-          while(errorPathsIter.hasNext()) {
-            //csvEntry.append(errorPathsIter.next().getPathCondition().toString());
-            csvEntry.append(errorPathsIter.next().getExceptionClass());
-            if(errorPathsIter.hasNext()) {
-              csvEntry.append(ELEMENT_SEPARATOR);
+          else {
+            // ID
+            csvEntry.append(config.getString(CONFIG_KEY_STATISTICS_ID) + CSV_SEPARATOR);
+
+            // Target
+            csvEntry.append(config.getString("target") + CSV_SEPARATOR);
+            String id = e.getKey();
+            ConcolicMethodConfig mc = cc.getMethodConfig(id);
+
+            // method signature
+            csvEntry.append(mc.toString() + CSV_SEPARATOR);
+
+            // symbolic vars
+            csvEntry.append(ca.getMethodConfig().getParams().size() + CSV_SEPARATOR);
+
+            // analysis time
+            long elapsed = (end - start)/1000;
+            csvEntry.append(elapsed + "s" + CSV_SEPARATOR);
+
+            // Date
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            java.util.Date date = new java.util.Date();
+            csvEntry.append(dateFormat.format(date) + CSV_SEPARATOR);
+
+            // Ok
+            csvEntry.append(ca.getConstraintsTree().getCoveredPaths().size() + CSV_SEPARATOR);
+            // ERROR
+            csvEntry.append(ca.getConstraintsTree().getErrorPaths().size() + CSV_SEPARATOR);
+            // DK
+            csvEntry.append(ca.getConstraintsTree().getDontKnowPaths().size() + CSV_SEPARATOR);
+
+            // jpf crash
+            if(jpfException != null) {
+              csvEntry.append(jpfException.getMessage() + CSV_SEPARATOR);
+            } else {
+              csvEntry.append(CSV_SEPARATOR);
             }
-          }
-          csvEntry.append(CSV_SEPARATOR);
-          
-          // DK constraints
-          Iterator<Path> dkPathsIter = ca.getConstraintsTree().getDontKnowPaths().iterator();
-          while(dkPathsIter.hasNext()) {
-            csvEntry.append(dkPathsIter.next().getPathCondition().toString());
-            if(dkPathsIter.hasNext()) {
-              csvEntry.append(ELEMENT_SEPARATOR);
+
+            // Error constraints
+            Iterator<Path> errorPathsIter = ca.getConstraintsTree().getErrorPaths().iterator();
+            while(errorPathsIter.hasNext()) {
+              //csvEntry.append(errorPathsIter.next().getPathCondition().toString());
+              csvEntry.append(errorPathsIter.next().getExceptionClass());
+              if(errorPathsIter.hasNext()) {
+                csvEntry.append(ELEMENT_SEPARATOR);
+              }
+            }
+            csvEntry.append(CSV_SEPARATOR);
+
+            // DK constraints
+            Iterator<Path> dkPathsIter = ca.getConstraintsTree().getDontKnowPaths().iterator();
+            while(dkPathsIter.hasNext()) {
+              csvEntry.append(dkPathsIter.next().getPathCondition().toString());
+              if(dkPathsIter.hasNext()) {
+                csvEntry.append(ELEMENT_SEPARATOR);
+              }
             }
           }
           csvEntry.append("\n");
