@@ -378,9 +378,26 @@ public class JDart implements JPFShell {
       for (Map.Entry<String, List<CompletedAnalysis>> e : ce.getCompletedAnalyses().entrySet()) {
         for (CompletedAnalysis ca : e.getValue()) {
           StringBuilder csvEntry = new StringBuilder();
-          if (ca.getConstraintsTree() == null) {            
+          if (ca.getConstraintsTree() == null) {
+            // Target
+            csvEntry.append(config.getString("target") + CSV_SEPARATOR);
+            String id = e.getKey();
+            ConcolicMethodConfig mc = cc.getMethodConfig(id);
+
+            // method signature
+            csvEntry.append(mc.toString() + CSV_SEPARATOR);
+            
+            // No tree
             csvEntry.append("NOTREE" + CSV_SEPARATOR);
-            csvEntry.append(jpfException.getMessage());
+            
+            // Get stacktrace if there was an error (always the case?)
+            String st = "";
+            if(jpfException != null) {
+              StringWriter stw = new StringWriter();
+              jpfException.printStackTrace(new PrintWriter(stw));
+              st = stw.toString(); // stack trace as a string
+            }
+            csvEntry.append(st);
             logger.info("tree is null");
           }
           else {
@@ -416,7 +433,10 @@ public class JDart implements JPFShell {
 
             // jpf crash
             if(jpfException != null) {
-              csvEntry.append(jpfException.getMessage() + CSV_SEPARATOR);
+              StringWriter stw = new StringWriter();
+              jpfException.printStackTrace(new PrintWriter(stw));
+              String st = stw.toString(); // stack trace as a string
+              csvEntry.append(st + CSV_SEPARATOR);
             } else {
               csvEntry.append(CSV_SEPARATOR);
             }
