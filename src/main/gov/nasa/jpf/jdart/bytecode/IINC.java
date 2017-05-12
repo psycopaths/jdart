@@ -21,25 +21,43 @@ import gov.nasa.jpf.constraints.expressions.NumericCompound;
 import gov.nasa.jpf.constraints.expressions.NumericOperator;
 import gov.nasa.jpf.constraints.types.BuiltinTypes;
 import gov.nasa.jpf.jdart.ConcolicInstructionFactory;
+import gov.nasa.jpf.jdart.ConcolicUtil;
+import gov.nasa.jpf.jdart.ConcolicUtil.Pair;
 import gov.nasa.jpf.vm.Instruction;
 import gov.nasa.jpf.vm.StackFrame;
 import gov.nasa.jpf.vm.ThreadInfo;
 
-
 public class IINC extends gov.nasa.jpf.jvm.bytecode.IINC {
-	public IINC(int localVarIndex, int incConstant){
-		super(localVarIndex, incConstant);
-	}
+
+  private final Constant symbolicInc;
+
+  public IINC(int localVarIndex, int incConstant) {
+    super(localVarIndex, incConstant);
+    this.symbolicInc = Constant.create(BuiltinTypes.SINT32, incConstant);
+  }
+
   @Override
-  public Instruction execute (ThreadInfo ti) {
+  public Instruction execute(ThreadInfo ti) {
     StackFrame sf = ti.getTopFrame();
-    Expression<?> sym_v = ( Expression<?>) sf.getLocalAttr(index);
-    sf.setLocalVariable(index, sf.getLocalVariable(index) + increment, false);
-    if (sym_v != null) {
-    	sf.setLocalAttr(index, NumericCompound.create(
-              sym_v.requireAs(BuiltinTypes.SINT32),NumericOperator.PLUS, Constant.create(BuiltinTypes.SINT32, increment)));
-    	if (ConcolicInstructionFactory.DEBUG) ConcolicInstructionFactory.logger.finest("IINC " + sf.getLocalAttr(index));
+    if (sf.getLocalAttr(index) == null) {
+      super.execute(ti);
     }
+
+    Pair<Integer> localAttr = ConcolicUtil.getLocalAttrInt(sf, index);
+
+    Pair<Integer> updatedAttr = new Pair<>(
+            localAttr.conc + increment,
+            NumericCompound.create(
+                    localAttr.symb.requireAs(BuiltinTypes.SINT32),
+                    NumericOperator.PLUS,
+                    symbolicInc));
+
+    ConcolicUtil.setLocalAttrInt(sf, index, updatedAttr);
+
+    if (ConcolicInstructionFactory.DEBUG) {
+      ConcolicInstructionFactory.logger.finest("IINC " + sf.getLocalAttr(index));
+    }
+
     return getNext(ti);
   }
 }
