@@ -21,7 +21,7 @@ public class Input {
   public int foo(int i) {
     System.err.println("\n-------- In foo! Parameter = " + i);
     Random rand = new Random();
-    int x = rand.nextInt(i);
+    int x = 0; //rand.nextInt(i);
     System.out.println("x: " + x);
     if (x > 100) {
       assert false;
