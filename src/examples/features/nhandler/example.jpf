@@ -1,0 +1,6 @@
+@include=../../config/jdart.jpf
+
+target=features.nhandler.Input
+
+concolic.method.foo=features.nhandler.Input.foo(i:int)
+concolic.method.foo.config=all_fields_symbolic

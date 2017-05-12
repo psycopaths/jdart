@@ -1,0 +1,6 @@
+@include=../../config/jdart.jpf
+
+target=features.exceptions.Input
+
+concolic.method.foo=features.exceptions.Input.foo(i:int)
+concolic.method.foo.config=all_fields_symbolic

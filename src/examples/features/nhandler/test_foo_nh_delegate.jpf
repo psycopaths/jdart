@@ -1,0 +1,12 @@
+@include=./example.jpf
+@using jpf-nhandler
+nhandler.delegateUnhandledNative=true
+
+nhandler.spec.delegate = java.util.Random.nextInt,\
+  java.lang.String.*
+
+concolic.method=foo
+
+
+
+
