@@ -40,7 +40,7 @@ public class IINC extends gov.nasa.jpf.jvm.bytecode.IINC {
   public Instruction execute(ThreadInfo ti) {
     StackFrame sf = ti.getTopFrame();
     if (sf.getLocalAttr(index) == null) {
-      super.execute(ti);
+      return super.execute(ti);
     }
 
     Pair<Integer> localAttr = ConcolicUtil.getLocalAttrInt(sf, index);
