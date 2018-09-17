@@ -279,10 +279,10 @@ public class JDart implements JPFShell {
             // dont know cases
             continue;
           }
-          String file_output = "";
-          String out = "";
+          StringBuilder file_output_builder = new StringBuilder();
+          StringBuilder out_builder = new StringBuilder();
           for (Variable v : p.getValuation().getVariables()) {
-            out += v.getResultType().getName() + ":" + v.getName() + "=" + p.getValuation().getValue(v) + ", ";
+        	  out_builder.append(v.getResultType().getName() + ":" + v.getName() + "=" + p.getValuation().getValue(v) + ", ");
             String vResultType = v.getResultType().getName();
             String type = null;
 
@@ -299,14 +299,14 @@ public class JDart implements JPFShell {
             }
 
             if (type != null) {
-              file_output += type + ":" + p.getValuation().getValue(v) + "\n";
+            	file_output_builder.append(type + ":" + p.getValuation().getValue(v) + "\n");
             }
           }
-          logger.info(out);
+          logger.info(out_builder.toString());
 
           if (printStream != null) {
             try {
-              printStream.print(file_output);
+              printStream.print(file_output_builder.toString());
             } catch (Exception ex) {
               logger.severe(ex);
             }
