@@ -14,7 +14,6 @@ RUN \
                 ant \
                 maven \
                 git \
-                mercurial \
                 junit \
                 build-essential \
                 python \
@@ -40,10 +39,11 @@ ENV JDART_DIR /jdart-project
 
 # Install jpf-core
 WORKDIR ${JDART_DIR}
-RUN hg clone http://babelfish.arc.nasa.gov/hg/jpf/jpf-core 
+RUN git clone https://github.com/javapathfinder/jpf-core.git
+
 # We know that rev 29 works with jdart
 WORKDIR ${JDART_DIR}/jpf-core
-RUN hg update -r 29
+RUN git checkout JPF-8.0
 RUN ant 
 #Could run ant test here but it takes a long time 
 
