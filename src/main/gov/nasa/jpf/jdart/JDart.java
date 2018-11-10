@@ -296,10 +296,12 @@ public class JDart implements JPFShell {
               type = "double";
             } else if (vResultType.equals("java.lang.Boolean")) {
               type = "boolean";
+            } else if (vResultType.equals("java.lang.Byte")) {
+              type = "byte";
             }
 
             if (type != null) {
-              file_output += type + ":" + p.getValuation().getValue(v) + "\n";
+              file_output += type + ":" + v.getName() + ":" + p.getValuation().getValue(v) + "\n";
             }
           }
           logger.info(out);
