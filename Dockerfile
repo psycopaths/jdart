@@ -4,13 +4,9 @@ MAINTAINER Kasper Luckow <kasper.luckow@sv.cmu.edu>
 #############################################################################
 # Setup base image 
 #############################################################################
-RUN \
-  apt-get update -y && \
-  apt-get install software-properties-common -y && \
-  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-  add-apt-repository ppa:webupd8team/java -y && \
-  apt-get update -y && \
-  apt-get install -y oracle-java8-installer \
+RUN apt-get update && \
+  apt-get install -y \
+				software-properties-common \
                 ant \
                 maven \
                 git \
@@ -18,16 +14,19 @@ RUN \
                 build-essential \
                 python \
                 antlr3 \
-                && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /var/cache/oracle-jdk8-installer
+				wget
+               
+
+RUN wget https://cdn.azul.com/zulu/bin/zulu8.38.0.13-ca-jdk8.0.212-linux_amd64.deb
+RUN dpkg -i zulu8.38.0.13-ca-jdk8.0.212-linux_amd64.deb
+RUN rm zulu8.38.0.13-ca-jdk8.0.212-linux_amd64.deb
 
 #############################################################################
 # Environment 
 #############################################################################
 
 # set java env
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+ENV JAVA_HOME /usr/lib/jvm/zulu-8-amd64
 ENV JUNIT_HOME /usr/share/java
 
 RUN mkdir /jdart-project
